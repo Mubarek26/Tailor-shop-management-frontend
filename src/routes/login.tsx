@@ -89,6 +89,9 @@ function LoginPage() {
                 placeholder="name@example.com or 0912..."
                 required
                 className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </div>
             <div className="space-y-2">
@@ -111,6 +114,9 @@ function LoginPage() {
                   minLength={8}
                   placeholder="••••••••"
                   className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <button
                   type="button"

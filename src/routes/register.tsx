@@ -79,7 +79,7 @@ function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                <Input id="email" type="email" value={form.email} onChange={(e) => upd("email", e.target.value)} required className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all" />
+                <Input id="email" type="email" value={form.email} onChange={(e) => upd("email", e.target.value)} required className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phoneNumber" className="text-sm font-medium">Phone number</Label>
@@ -100,6 +100,9 @@ function RegisterPage() {
                     required 
                     minLength={8} 
                     className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck="false"
                   />
                   <button
                     type="button"
@@ -121,6 +124,9 @@ function RegisterPage() {
                     required 
                     minLength={8} 
                     className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck="false"
                   />
                   <button
                     type="button"

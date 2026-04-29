@@ -99,6 +99,9 @@ function ResetPage() {
                   required 
                   minLength={8} 
                   className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <button
                   type="button"
@@ -121,6 +124,9 @@ function ResetPage() {
                   required 
                   minLength={8} 
                   className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <button
                   type="button"
