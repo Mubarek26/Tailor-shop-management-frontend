@@ -310,11 +310,11 @@ function OrderDetailPage() {
               </div>
               <div className="p-3 rounded-xl border bg-muted/30">
                 <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Paid / የተከፈለ</p>
-                <p className="text-base font-bold text-foreground">{formatETB(order.deposit)}</p>
+                <p className="text-lg font-black text-foreground">{formatETB(order.deposit)}</p>
               </div>
               <div className="p-3 rounded-xl border bg-destructive/5 border-destructive/10">
                 <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Balance / ቀሪ</p>
-                <p className="text-base font-bold text-destructive">{formatETB(order.remaining_price)}</p>
+                <p className="text-lg font-black text-destructive">{formatETB(order.remaining_price)}</p>
               </div>
             </div>
           </Card>
@@ -576,7 +576,7 @@ function Card({
         {icon && <div className="text-primary">{icon}</div>}
         <h2 className="flex items-baseline gap-2">
           <span className="text-sm font-black uppercase tracking-widest text-foreground">{title}</span>
-          {amharic && <span className="text-[10px] font-bold text-primary opacity-80">{amharic}</span>}
+          {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
         </h2>
       </div>
       <div className="p-6">
@@ -589,12 +589,12 @@ function Card({
 function Field({ label, amharic, value, mono }: { label: string; amharic?: string; value?: string | number | null; mono?: boolean }) {
   return (
     <div className="space-y-1">
-      <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
-        {amharic && <span className="text-[10px] font-bold text-primary opacity-60">{amharic}</span>}
+      <div className="flex items-center gap-2 mb-0.5">
+        <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{label}</span>
+        {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
       </div>
-      <div className={`text-sm font-bold text-foreground ${mono ? "font-mono tracking-tight" : ""}`}>
-        {value ?? <span className="text-muted-foreground font-normal italic">Not specified</span>}
+      <div className={`text-base font-bold text-foreground ${mono ? "font-mono tracking-tight" : ""}`}>
+        {value ?? <span className="text-muted-foreground font-normal italic text-sm">Not specified</span>}
       </div>
     </div>
   );
@@ -609,13 +609,13 @@ function MGroup({ title, amharic, data }: { title: string; amharic?: string; dat
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {data.map(([k, am, v]) => (
-          <div key={k} className="rounded-xl border bg-muted/20 px-3 py-2.5 transition-colors hover:bg-muted/30">
-            <div className="flex flex-col mb-1">
-              <span className="text-[9px] font-bold text-muted-foreground uppercase">{k}</span>
-              <span className="text-[9px] font-bold text-primary/60">{am}</span>
+          <div key={k} className="rounded-xl border bg-muted/20 px-3 py-3 transition-colors hover:bg-muted/30">
+            <div className="flex flex-col mb-1.5">
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-wider leading-tight">{k}</span>
+              <span className="text-sm font-bold text-primary leading-tight">{am}</span>
             </div>
-            <div className="text-sm font-black text-foreground">
-              {v ?? "—"}{v != null ? <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">cm</span> : ""}
+            <div className="text-lg font-black text-foreground leading-none">
+              {v ?? "—"}{v != null ? <span className="ml-0.5 text-xs font-normal text-muted-foreground">cm</span> : ""}
             </div>
           </div>
         ))}

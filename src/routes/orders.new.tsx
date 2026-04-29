@@ -272,8 +272,8 @@ function NewOrderPage() {
                   {g.fields.map(([key, label, am]) => (
                     <div key={key} className="flex items-center justify-between gap-3 p-2 rounded-xl bg-muted/20 transition-colors hover:bg-muted/40">
                       <div className="flex flex-col">
-                        <span className="text-xs font-bold text-foreground">{label}</span>
-                        <span className="text-[10px] font-bold text-primary opacity-70">{am}</span>
+                        <span className="text-sm font-black text-foreground leading-tight">{label}</span>
+                        <span className="text-sm font-bold text-primary leading-tight">{am}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Input
@@ -281,7 +281,7 @@ function NewOrderPage() {
                           type="number"
                           step="0.1"
                           placeholder="0"
-                          className="h-9 w-20 text-right font-bold focus-visible:ring-primary"
+                          className="h-10 w-24 text-right font-black text-base focus-visible:ring-primary"
                           value={measurements[key] ?? ""}
                           onChange={(e) =>
                             setMeasurements({ ...measurements, [key]: e.target.value })
@@ -389,7 +389,7 @@ function Section({ title, amharic, children, icon: Icon }: { title: string; amha
       <div className="px-6 py-4 border-b bg-muted/30 flex items-center gap-2">
         {Icon && <Icon className="h-4 w-4 text-primary" />}
         <h2 className="font-black text-xs uppercase tracking-widest text-foreground">{title}</h2>
-        {amharic && <span className="text-[10px] font-bold text-primary opacity-70">{amharic}</span>}
+        {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
       </div>
       <div className="p-6">
         {children}
@@ -404,11 +404,11 @@ function BilLabel({
   en: string; am: string; htmlFor?: string; icon?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 mb-1">
       {icon && <span className="text-muted-foreground opacity-70">{icon}</span>}
-      <Label htmlFor={htmlFor} className="flex items-baseline gap-1.5 cursor-pointer">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{en}</span>
-        <span className="text-[10px] font-bold text-primary opacity-60">{am}</span>
+      <Label htmlFor={htmlFor} className="flex items-baseline gap-2 cursor-pointer">
+        <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{en}</span>
+        <span className="text-sm font-bold text-primary">{am}</span>
       </Label>
     </div>
   );
