@@ -91,10 +91,15 @@ function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back, {user?.fullName?.split(" ")[0]}</h1>
-        <p className="mt-1 text-muted-foreground">Here's a snapshot of your shop today.</p>
+    <div className="max-w-7xl mx-auto space-y-8 pb-20">
+      <div className="flex flex-col gap-1 px-1">
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+          Welcome back, <span className="text-primary">{user?.fullName?.split(" ")[0]}</span>
+        </h1>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-muted-foreground">Snapshot of your business performance today.</p>
+          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-primary/10 text-[10px] font-bold text-primary uppercase tracking-widest">Live Updates</span>
+        </div>
       </div>
 
       {loading ? (
@@ -107,38 +112,42 @@ function DashboardPage() {
             {cards.map((c) => {
               const Icon = c.icon;
               return (
-                <div key={c.label} className="rounded-xl border bg-card p-5 shadow-[var(--shadow-sm)]">
+                <div key={c.label} className="group relative overflow-hidden rounded-2xl border bg-card p-6 shadow-[var(--shadow-sm)] transition-all hover:shadow-md">
                   <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">{c.label}</p>
-                      <p className="mt-2 text-2xl font-bold tracking-tight">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{c.label}</p>
+                      <p className="text-2xl font-black tracking-tight text-foreground">
                         {c.isCurrency ? formatETB(c.value) : c.value.toLocaleString()}
                       </p>
                     </div>
-                    <div className={`rounded-lg bg-muted p-2 ${c.color}`}>
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-muted transition-transform group-hover:scale-110 ${c.color}`}>
                       <Icon className="h-5 w-5" />
                     </div>
                   </div>
+                  <div className="absolute bottom-0 left-0 h-1 w-full bg-primary/5 transition-colors group-hover:bg-primary/20"></div>
                 </div>
               );
             })}
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-xl border bg-card p-6 lg:col-span-2">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="rounded-2xl border bg-card shadow-[var(--shadow-sm)] overflow-hidden lg:col-span-2">
+              <div className="px-6 py-4 border-b bg-muted/30 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="font-semibold">Revenue trend</h2>
-                  <p className="text-xs text-muted-foreground">Total revenue over time</p>
+                  <h2 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
+                    <TrendingUp className="h-3 w-3 text-primary" />
+                    Revenue Trend
+                  </h2>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Performance over time</p>
                 </div>
-                <div className="flex gap-1 rounded-lg border p-0.5">
+                <div className="flex gap-1 rounded-xl bg-muted/50 p-1">
                   {(["day", "week", "month"] as const).map((g) => (
                     <button
                       key={g}
                       onClick={() => setGroupBy(g)}
-                      className={`rounded-md px-3 py-1 text-xs capitalize transition-colors ${
+                      className={`rounded-lg px-4 py-1 text-[10px] font-bold uppercase tracking-wider transition-all ${
                         groupBy === g
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-primary text-primary-foreground shadow-sm scale-[1.02]"
                           : "text-muted-foreground hover:bg-muted"
                       }`}
                     >
@@ -147,10 +156,10 @@ function DashboardPage() {
                   ))}
                 </div>
               </div>
-              <div className="h-72">
+              <div className="p-6 h-80">
                 {revenue.length === 0 ? (
-                  <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                    No revenue data yet
+                  <div className="flex h-full items-center justify-center border-2 border-dashed rounded-xl text-xs text-muted-foreground">
+                    Waiting for revenue data...
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
@@ -193,13 +202,18 @@ function DashboardPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border bg-card p-6">
-              <h2 className="font-semibold">Order status</h2>
-              <p className="text-xs text-muted-foreground">Current breakdown</p>
-              <div className="mt-4 h-64">
+            <div className="rounded-2xl border bg-card shadow-[var(--shadow-sm)] overflow-hidden">
+              <div className="px-6 py-4 border-b bg-muted/30">
+                <h2 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
+                  <ShoppingBag className="h-3 w-3 text-primary" />
+                  Order Status
+                </h2>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Current distribution</p>
+              </div>
+              <div className="p-6 h-80">
                 {statusData.length === 0 ? (
-                  <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                    No orders yet
+                  <div className="flex h-full items-center justify-center border-2 border-dashed rounded-xl text-xs text-muted-foreground">
+                    No orders to analyze yet
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
@@ -208,9 +222,10 @@ function DashboardPage() {
                         data={statusData}
                         dataKey="value"
                         nameKey="name"
-                        innerRadius={50}
-                        outerRadius={80}
-                        paddingAngle={2}
+                        innerRadius={60}
+                        outerRadius={90}
+                        paddingAngle={4}
+                        stroke="none"
                       >
                         {statusData.map((d) => (
                           <Cell key={d.key} fill={STATUS_COLORS[d.key] ?? "oklch(0.7 0 0)"} />
@@ -220,13 +235,23 @@ function DashboardPage() {
                         contentStyle={{
                           background: "var(--card)",
                           border: "1px solid var(--border)",
-                          borderRadius: 8,
-                          fontSize: 12,
-                          color: "var(--foreground)",
+                          borderRadius: 12,
+                          fontSize: 10,
+                          fontWeight: "bold",
+                          boxShadow: "var(--shadow-sm)",
                         }}
-                        itemStyle={{ color: "var(--foreground)" }}
+                        itemStyle={{ textTransform: "capitalize" }}
                       />
-                      <Legend wrapperStyle={{ fontSize: 12 }} />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={36} 
+                        wrapperStyle={{ 
+                          fontSize: 10, 
+                          fontWeight: "bold", 
+                          textTransform: "uppercase", 
+                          paddingTop: 20 
+                        }} 
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 )}

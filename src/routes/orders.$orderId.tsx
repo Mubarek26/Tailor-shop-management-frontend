@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -15,7 +16,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Trash2, ArrowLeft, UserPlus, UserMinus, Plus } from "lucide-react";
+import { 
+  Loader2, 
+  Trash2, 
+  ArrowLeft, 
+  UserPlus, 
+  UserMinus, 
+  Plus, 
+  User as UserIcon, 
+  ShoppingBag, 
+  Scissors, 
+  Ruler, 
+  Wallet 
+} from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import {
@@ -194,52 +207,62 @@ function OrderDetailPage() {
   const tailor = order.assigned_tailor_id as User | undefined;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/orders" })}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Orders
+    <div className="max-w-6xl mx-auto space-y-6 pb-20">
+      {/* Premium Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-1">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-9 w-9 shrink-0 rounded-full bg-background" 
+            onClick={() => navigate({ to: "/orders" })}
+          >
+            <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">
-            Order #{customer?.unique_code ?? order._id.slice(-6)}
-          </h1>
-          <div className="mt-2 flex items-center gap-3">
-            <StatusBadge status={order.status} />
-            <span className="text-sm text-muted-foreground">
-              Created {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy") : "—"}
-            </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+                Order #{customer?.unique_code ?? order._id.slice(-6)}
+              </h1>
+              <StatusBadge status={order.status} />
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+              Placed on {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy") : "—"}
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Select value={order.status} onValueChange={updateStatus}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_progress">In progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 sm:flex-none">
+            <Select value={order.status} onValueChange={updateStatus}>
+              <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs font-semibold">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_progress">In progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-destructive hover:text-destructive">
-                <Trash2 className="mr-2 h-4 w-4" /> Delete
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="w-[90vw] sm:max-w-md">
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete this order?</AlertDialogTitle>
+                <AlertDialogTitle>Delete Order?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete the order, measurements, and design image.
+                  This will permanently remove this order and all associated records.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={deleteOrder} className="bg-destructive text-destructive-foreground">
-                  Delete
+                  Confirm Delete
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -250,64 +273,111 @@ function OrderDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {/* Customer */}
-          <Card title="Customer" amharic="ደንበኛ">
-            <Field label="Name" amharic="ስም" value={customer?.name} />
-            <Field label="Phone" amharic="ስልክ" value={customer?.phone} />
-            <Field label="Code" amharic="ኮድ" value={`#${customer?.unique_code ?? "—"}`} mono />
+          <Card 
+            title="Customer" 
+            amharic="ደንበኛ" 
+            icon={<UserIcon className="h-4 w-4" />}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+              <Field label="Full Name" amharic="ስም" value={customer?.name} />
+              <Field label="Phone Number" amharic="ስልክ" value={customer?.phone} />
+              <div className="sm:col-span-2">
+                <Field label="Customer Code" amharic="ኮድ" value={`#${customer?.unique_code ?? "—"}`} mono />
+              </div>
+            </div>
           </Card>
 
-          {/* Order */}
-          <Card title="Order details" amharic="የትዕዛዝ ዝርዝር">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Total price" amharic="ጠቅላላ ዋጋ" value={formatETB(order.total_price)} />
-              <Field label="Deposit" amharic="ቅድሚያ ክፍያ" value={formatETB(order.deposit)} />
-              <Field label="Remaining" amharic="ቀሪ ክፍያ" value={formatETB(order.remaining_price)} />
-              <Field
-                label="Appointment"
-                amharic="ቀጠሮ"
-                value={
-                  order.appointment_date
-                    ? format(new Date(order.appointment_date), "MMM d, yyyy")
-                    : "—"
-                }
-              />
+          {/* Order Financials */}
+          <Card 
+            title="Financial Overview" 
+            amharic="የክፍያ ዝርዝር" 
+            icon={<ShoppingBag className="h-4 w-4" />}
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Price / ጠቅላላ ዋጋ</p>
+                    <p className="text-2xl font-black text-primary">{formatETB(order.total_price)}</p>
+                  </div>
+                  <div className="text-right space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Appointment / ቀጠሮ</p>
+                    <p className="text-sm font-bold text-foreground">
+                      {order.appointment_date ? format(new Date(order.appointment_date), "MMM d, yyyy") : "No date"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-3 rounded-xl border bg-muted/30">
+                <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Paid / የተከፈለ</p>
+                <p className="text-base font-bold text-foreground">{formatETB(order.deposit)}</p>
+              </div>
+              <div className="p-3 rounded-xl border bg-destructive/5 border-destructive/10">
+                <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Balance / ቀሪ</p>
+                <p className="text-base font-bold text-destructive">{formatETB(order.remaining_price)}</p>
+              </div>
             </div>
           </Card>
 
           {/* Design */}
-          <Card title="Design details" amharic="የዲዛይን ዝርዝር">
+          <Card 
+            title="Style & Design" 
+            amharic="የዲዛይን ዝርዝር" 
+            icon={<Scissors className="h-4 w-4" />}
+          >
             {!design ? (
-              <p className="text-sm text-muted-foreground">No design styles specified.</p>
+              <div className="py-4 text-center border-2 border-dashed rounded-xl border-muted/50">
+                <p className="text-sm text-muted-foreground italic">No design styles recorded.</p>
+              </div>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Coat style" amharic="ካፖርት ስታይል" value={design.coat_style} />
-                <Field label="Pant style" amharic="ሱሪ ስታይል" value={design.pant_style} />
-                <Field label="Vest style" amharic="ቬስት ስታይል" value={design.vest_style} />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="p-3 rounded-xl border bg-card">
+                    <Field label="Coat Style" amharic="ካፖርት ስታይል" value={design.coat_style} />
+                  </div>
+                  <div className="p-3 rounded-xl border bg-card">
+                    <Field label="Pant Style" amharic="ሱሪ ስታይል" value={design.pant_style} />
+                  </div>
+                  <div className="p-3 rounded-xl border bg-card">
+                    <Field label="Vest Style" amharic="ቬስት ስታይል" value={design.vest_style} />
+                  </div>
+                </div>
                 {design.notes && (
-                  <div className="sm:col-span-3">
-                    <Field label="Notes" amharic="ማስታወሻ" value={design.notes} />
+                  <div className="p-4 rounded-xl bg-muted/40 border">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Special Notes / ማስታወሻ</span>
+                    </div>
+                    <p className="text-sm leading-relaxed italic text-foreground/80">{design.notes}</p>
                   </div>
                 )}
               </div>
             )}
             {order.design_image_url && (
-              <div className="mt-4">
-                <Label className="mb-2 block">Reference Image / <span className="text-muted-foreground font-normal">የማጣቀሻ ምስል</span></Label>
-                <img
-                  src={order.design_image_url}
-                  alt="Design"
-                  className="max-h-72 rounded-lg border object-contain"
-                />
+              <div className="mt-6">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Design Reference / የማጣቀሻ ምስል</p>
+                <div className="relative group overflow-hidden rounded-xl border shadow-sm">
+                  <img
+                    src={order.design_image_url}
+                    alt="Design"
+                    className="w-full max-h-[500px] object-contain bg-muted/10 transition-transform group-hover:scale-[1.02]"
+                  />
+                </div>
               </div>
             )}
           </Card>
 
           {/* Measurements */}
-          <Card title="Measurements" amharic="መለኪያዎች">
+          <Card 
+            title="Measurements" 
+            amharic="መለኪያዎች" 
+            icon={<Ruler className="h-4 w-4" />}
+          >
             {!measurements ? (
-              <p className="text-sm text-muted-foreground">No measurements yet.</p>
+              <div className="py-8 text-center border-2 border-dashed rounded-xl border-muted/50">
+                <p className="text-sm text-muted-foreground">No measurements recorded yet.</p>
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-6">
                 <MGroup
                   title="Coat"
                   amharic="ካፖርት"
@@ -318,6 +388,7 @@ function OrderDetailPage() {
                     ["Shoulder", "ትከሻ", measurements.coat_shoulder],
                   ]}
                 />
+                <Separator className="opacity-50" />
                 <MGroup
                   title="Pant"
                   amharic="ሱሪ"
@@ -329,6 +400,7 @@ function OrderDetailPage() {
                     ["Bottom", "ታች", measurements.pant_bottom],
                   ]}
                 />
+                <Separator className="opacity-50" />
                 <MGroup
                   title="Vest"
                   amharic="ቬስት"
@@ -345,18 +417,30 @@ function OrderDetailPage() {
 
         <div className="space-y-6">
           {/* Tailor assignment */}
-          <Card title="Assigned tailor" amharic="የተመደበ ሰፊ">
+          <Card 
+            title="Workshop Team" 
+            amharic="የተመደበ ሰፊ" 
+            icon={<Scissors className="h-4 w-4" />}
+          >
             {tailor ? (
-              <div>
-                <p className="font-medium">{tailor.fullName}</p>
-                <p className="text-sm text-muted-foreground">{tailor.phoneNumber}</p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 rounded-xl border bg-muted/10">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                    {tailor.fullName?.[0]?.toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold truncate">{tailor.fullName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{tailor.phoneNumber}</p>
+                  </div>
+                </div>
+                
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="mt-3 w-full text-destructive hover:text-destructive hover:bg-destructive/10">
-                      <UserMinus className="mr-2 h-4 w-4" /> Unassign
+                    <Button variant="outline" size="sm" className="w-full h-10 text-xs font-semibold text-destructive hover:text-destructive hover:bg-destructive/10 border-dashed">
+                      <UserMinus className="mr-2 h-4 w-4" /> Change Tailor
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="w-[90vw] sm:max-w-[425px]">
+                  <AlertDialogContent className="w-[90vw] sm:max-w-md">
                     <AlertDialogHeader>
                       <AlertDialogTitle>Unassign tailor?</AlertDialogTitle>
                       <AlertDialogDescription>
@@ -373,51 +457,56 @@ function OrderDetailPage() {
                 </AlertDialog>
               </div>
             ) : (
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">No tailor assigned.</p>
-                <Select 
-                  value={pendingTailorId || ""} 
-                  onValueChange={(id) => {
-                    setPendingTailorId(id);
-                    setShowAssignDialog(true);
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Assign tailor..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tailors.length === 0 ? (
-                      <div className="p-2 text-xs text-muted-foreground">No tailors available</div>
-                    ) : (
-                      tailors.map((t) => (
-                        <SelectItem key={t._id} value={t._id}>
-                          {t.fullName} — {t.phoneNumber}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+              <div className="space-y-3">
+                <p className="text-xs text-muted-foreground italic">No tailor has been assigned to this order yet.</p>
+                <div className="relative">
+                  <Select 
+                    value={pendingTailorId || ""} 
+                    onValueChange={(id) => {
+                      setPendingTailorId(id);
+                      setShowAssignDialog(true);
+                    }}
+                  >
+                    <SelectTrigger className="w-full h-11 bg-primary/5 border-primary/20 text-primary font-semibold">
+                      <SelectValue placeholder="Select a tailor..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tailors.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-muted-foreground">No tailors found</div>
+                      ) : (
+                        tailors.map((t) => (
+                          <SelectItem key={t._id} value={t._id}>
+                            <div className="flex flex-col py-1">
+                              <span className="font-bold">{t.fullName}</span>
+                              <span className="text-[10px] text-muted-foreground">{t.phoneNumber}</span>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 <AlertDialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
-                  <AlertDialogContent className="w-[90vw] sm:max-w-[425px]">
+                  <AlertDialogContent className="w-[90vw] sm:max-w-md">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Assign tailor?</AlertDialogTitle>
+                      <AlertDialogTitle>Assign Tailor?</AlertDialogTitle>
                       <AlertDialogDescription>
                         Assign <span className="font-bold text-foreground">
                           {tailors.find(t => t._id === pendingTailorId)?.fullName}
-                        </span> to this order?
+                        </span> to begin production on this order?
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                       <AlertDialogCancel onClick={() => {
                         setPendingTailorId(null);
                         setShowAssignDialog(false);
-                      }} className="mt-0">Cancel</AlertDialogCancel>
+                      }} className="mt-0">No, Cancel</AlertDialogCancel>
                       <AlertDialogAction 
                         onClick={() => pendingTailorId && assignTailor(pendingTailorId)}
                         className="bg-[image:var(--gradient-primary)]"
                       >
-                        Assign
+                        Confirm Assignment
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -427,24 +516,41 @@ function OrderDetailPage() {
           </Card>
 
           {/* Payments */}
-          <Card title="Payments" amharic="ክፍያዎች">
-            <div className="space-y-2">
+          <Card 
+            title="Transaction History" 
+            amharic="ክፍያዎች" 
+            icon={<Wallet className="h-4 w-4" />}
+          >
+            <div className="space-y-3">
               {payment?.history?.length ? (
-                payment.history.map((p, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
-                    <div>
-                      <div className="font-medium">{formatETB(p.amount)}</div>
-                      <div className="text-xs capitalize text-muted-foreground">{p.payment_type}</div>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {payment.history.map((p, i) => (
+                    <div key={i} className="flex items-center justify-between rounded-xl border bg-muted/20 p-3 text-sm transition-colors hover:bg-muted/30">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Wallet className="h-3 w-3 text-primary" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-foreground">{formatETB(p.amount)}</div>
+                          <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">{p.payment_type}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] font-bold text-muted-foreground">
+                          {p.payment_date ? format(new Date(p.payment_date), "MMM d, yyyy") : ""}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      {p.payment_date ? format(new Date(p.payment_date), "MMM d") : ""}
-                    </span>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No payments recorded.</p>
+                <div className="py-4 text-center border rounded-xl bg-muted/10">
+                  <p className="text-xs text-muted-foreground italic">No payments recorded yet.</p>
+                </div>
               )}
-              <AddPaymentDialog onAdd={addPayment} remaining={order.remaining_price} />
+              <div className="pt-2">
+                <AddPaymentDialog onAdd={addPayment} remaining={order.remaining_price} />
+              </div>
             </div>
           </Card>
         </div>
@@ -453,45 +559,64 @@ function OrderDetailPage() {
   );
 }
 
-function Card({ title, amharic, children }: { title: string; amharic?: string; children: React.ReactNode }) {
+function Card({ 
+  title, 
+  amharic, 
+  icon, 
+  children 
+}: { 
+  title: string; 
+  amharic?: string; 
+  icon?: React.ReactNode; 
+  children: React.ReactNode 
+}) {
   return (
-    <div className="rounded-xl border bg-card p-6">
-      <h2 className="mb-4 flex items-baseline gap-2">
-        <span className="text-base font-bold text-foreground">{title}</span>
-        {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
-      </h2>
-      {children}
+    <div className="rounded-2xl border bg-card shadow-[var(--shadow-sm)] overflow-hidden">
+      <div className="flex items-center gap-2 px-6 py-4 bg-muted/30 border-b">
+        {icon && <div className="text-primary">{icon}</div>}
+        <h2 className="flex items-baseline gap-2">
+          <span className="text-sm font-black uppercase tracking-widest text-foreground">{title}</span>
+          {amharic && <span className="text-[10px] font-bold text-primary opacity-80">{amharic}</span>}
+        </h2>
+      </div>
+      <div className="p-6">
+        {children}
+      </div>
     </div>
   );
 }
 
 function Field({ label, amharic, value, mono }: { label: string; amharic?: string; value?: string | number | null; mono?: boolean }) {
   return (
-    <div className="mb-3">
-      <div className="flex items-center gap-1.5 mb-1">
-        <span className="text-xs font-bold uppercase tracking-wide text-foreground">{label}</span>
-        {amharic && <span className="text-xs font-bold text-primary">{amharic}</span>}
+    <div className="space-y-1">
+      <div className="flex items-center gap-1.5">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
+        {amharic && <span className="text-[10px] font-bold text-primary opacity-60">{amharic}</span>}
       </div>
-      <div className={`text-sm font-medium ${mono ? "font-mono" : ""}`}>{value ?? "—"}</div>
+      <div className={`text-sm font-bold text-foreground ${mono ? "font-mono tracking-tight" : ""}`}>
+        {value ?? <span className="text-muted-foreground font-normal italic">Not specified</span>}
+      </div>
     </div>
   );
 }
 
 function MGroup({ title, amharic, data }: { title: string; amharic?: string; data: [string, string, number | undefined][] }) {
   return (
-    <div>
-      <div className="mb-2 flex items-center gap-2">
-        <span className="text-xs font-bold uppercase tracking-wide text-foreground">{title}</span>
-        {amharic && <span className="text-xs font-bold text-primary">{amharic}</span>}
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <span className="inline-block px-2 py-0.5 rounded bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary">{title}</span>
+        {amharic && <span className="text-[10px] font-bold text-primary/60">{amharic}</span>}
       </div>
-      <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {data.map(([k, am, v]) => (
-          <div key={k} className="rounded-lg bg-muted/40 px-3 py-2 text-sm">
-            <div className="flex items-center gap-1 mb-1">
-              <span className="text-xs font-semibold text-foreground">{k}</span>
-              <span className="text-xs font-semibold text-primary">{am}</span>
+          <div key={k} className="rounded-xl border bg-muted/20 px-3 py-2.5 transition-colors hover:bg-muted/30">
+            <div className="flex flex-col mb-1">
+              <span className="text-[9px] font-bold text-muted-foreground uppercase">{k}</span>
+              <span className="text-[9px] font-bold text-primary/60">{am}</span>
             </div>
-            <div className="font-bold text-foreground">{v ?? "—"}{v != null ? " cm" : ""}</div>
+            <div className="text-sm font-black text-foreground">
+              {v ?? "—"}{v != null ? <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">cm</span> : ""}
+            </div>
           </div>
         ))}
       </div>
@@ -517,13 +642,13 @@ function AddPaymentDialog({
           <Plus className="mr-2 h-4 w-4" /> Record payment
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Record payment</DialogTitle>
+          <DialogTitle>Record Payment</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-5 pt-4">
           <div className="space-y-2">
-            <Label>Amount (ETB)</Label>
+            <Label className="text-xs font-bold uppercase tracking-wider">Amount (ETB)</Label>
             <Input
               type="number"
               min="0"
@@ -531,21 +656,22 @@ function AddPaymentDialog({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder={`Remaining: ${formatETB(remaining)}`}
+              className="h-11 font-bold text-lg"
             />
           </div>
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label className="text-xs font-bold uppercase tracking-wider">Payment Type</Label>
             <Select value={type} onValueChange={(v) => setType(v as any)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-11 font-semibold"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="deposit">Deposit</SelectItem>
-                <SelectItem value="full">Full payment</SelectItem>
+                <SelectItem value="deposit">Deposit / ቅድሚያ</SelectItem>
+                <SelectItem value="full">Full Payment / ሙሉ ክፍያ</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+        <DialogFooter className="flex-col sm:flex-row gap-2 mt-6">
+          <Button variant="outline" onClick={() => setOpen(false)} className="w-full sm:w-auto">Cancel</Button>
           <Button
             onClick={() => {
               const a = Number(amount);
@@ -557,9 +683,9 @@ function AddPaymentDialog({
               setOpen(false);
               setAmount("");
             }}
-            className="bg-[image:var(--gradient-primary)]"
+            className="w-full sm:w-auto bg-[image:var(--gradient-primary)] font-bold"
           >
-            Save payment
+            Confirm Payment
           </Button>
         </DialogFooter>
       </DialogContent>

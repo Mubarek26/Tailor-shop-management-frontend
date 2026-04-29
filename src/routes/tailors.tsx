@@ -7,7 +7,7 @@ import { api, type User } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Scissors, UserPlus } from "lucide-react";
+import { Loader2, Plus, Scissors, UserPlus, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Pagination } from "@/components/Pagination";
 import {
@@ -61,11 +61,11 @@ function TailorsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tailors</h1>
-          <p className="mt-1 text-muted-foreground">Manage your team of tailors.</p>
+    <div className="max-w-6xl mx-auto space-y-8 pb-20">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-1">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">Workshop Team <span className="text-primary ml-1 text-xl sm:text-2xl">ሰፊዎች</span></h1>
+          <p className="text-sm text-muted-foreground">Manage and monitor your team of professional tailors.</p>
         </div>
         <AddTailorDialog onDone={onDone} />
       </div>
@@ -76,37 +76,42 @@ function TailorsPage() {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : tailors.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="mb-3 rounded-full bg-muted p-4">
-              <Scissors className="h-6 w-6 text-muted-foreground" />
+          <div className="flex flex-col items-center justify-center py-20 text-center px-6">
+            <div className="mb-4 rounded-2xl bg-primary/10 p-6 text-primary">
+              <Scissors className="h-8 w-8" />
             </div>
-            <p className="font-medium">No tailors yet</p>
-            <p className="text-sm text-muted-foreground">Create one or assign by phone number.</p>
+            <h3 className="text-lg font-black uppercase tracking-tight text-foreground">No Tailors Found</h3>
+            <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+              You haven't added any tailors to your workshop yet. Start by creating a new account or assigning an existing one.
+            </p>
           </div>
         ) : (
           <>
             {/* Mobile View: List of Cards */}
-            <div className="grid gap-3 p-3 md:hidden">
+            <div className="grid gap-4 p-4 md:hidden">
               {tailors.map((t) => (
                 <div 
                   key={t._id} 
-                  className="rounded-xl border bg-card p-4 transition-all"
+                  className="group relative overflow-hidden rounded-2xl border bg-card p-5 shadow-[var(--shadow-sm)] transition-all active:scale-[0.98]"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary text-base font-black border border-primary/20">
                       {t.fullName?.[0]?.toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-bold text-foreground truncate">{t.fullName}</div>
-                      <div className="text-xs text-muted-foreground">{t.phoneNumber}</div>
+                      <div className="font-black text-foreground truncate uppercase text-sm tracking-tight">{t.fullName}</div>
+                      <div className="text-xs font-bold text-muted-foreground mt-0.5">{t.phoneNumber}</div>
                     </div>
-                    <div className="text-[10px] font-bold uppercase px-2 py-1 rounded-md bg-muted text-muted-foreground border">
-                      {t.status ?? "active"}
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                        {t.status ?? "active"}
+                      </span>
                     </div>
                   </div>
                   {t.email && (
-                    <div className="mt-3 border-t border-muted/50 pt-2 text-xs text-muted-foreground truncate">
-                      {t.email}
+                    <div className="mt-4 border-t border-muted/50 pt-3 flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary/40"></div>
+                      <p className="text-[10px] font-bold text-muted-foreground truncate uppercase tracking-wider">{t.email}</p>
                     </div>
                   )}
                 </div>
