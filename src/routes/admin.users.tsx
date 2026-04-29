@@ -179,8 +179,78 @@ function UsersAdminPage() {
             <p className="font-medium">No users</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Mobile View: List of Cards */}
+            <div className="grid gap-3 p-3 md:hidden">
+              {filtered.map((u) => (
+                <div 
+                  key={u._id} 
+                  className="rounded-xl border bg-card p-4 transition-all"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                        {u.fullName?.[0]?.toUpperCase()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-foreground truncate">{u.fullName}</div>
+                        <div className="text-xs text-muted-foreground truncate">{u.email}</div>
+                        <div className="mt-1 text-[10px] font-bold uppercase text-muted-foreground tracking-wider">{u.role}</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <StatusBadge status={u.status || "active"} />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-muted/50 pt-3">
+                    <div className="text-xs text-muted-foreground">{u.phoneNumber}</div>
+                    <div className="flex gap-1">
+                      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleViewClick(u)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleEditClick(u)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete this user?</AlertDialogTitle>
+                            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => removeUser(u._id)} className="bg-destructive text-destructive-foreground">
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                  
+                  {u.role === "owner" && u.status === "pending" && (
+                    <div className="mt-3 flex gap-2 border-t border-muted/50 pt-3">
+                      <Button size="sm" variant="outline" className="flex-1 text-xs h-9" onClick={() => updateStatus(u._id, "approved")}>
+                        Approve
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1 text-xs h-9 text-destructive hover:text-destructive" onClick={() => updateStatus(u._id, "rejected")}>
+                        Reject
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">User</th>
@@ -253,7 +323,8 @@ function UsersAdminPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </>
+      )}
         {!loading && users.length > 0 && (
           <Pagination 
             page={page} 
