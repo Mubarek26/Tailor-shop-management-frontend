@@ -32,29 +32,32 @@ export const Route = createFileRoute("/orders/new")({
 const measurementGroups = [
   {
     title: "Coat",
+    amharic: "ካፖርት",
     fields: [
-      ["coat_length", "Length"],
-      ["coat_waist", "Waist"],
-      ["coat_chest", "Chest"],
-      ["coat_shoulder", "Shoulder"],
+      ["coat_length", "Length", "ቁመት"],
+      ["coat_waist", "Waist", "ወገብ"],
+      ["coat_chest", "Chest", "ደረት"],
+      ["coat_shoulder", "Shoulder", "ትከሻ"],
     ],
   },
   {
     title: "Pant",
+    amharic: "ሱሪ",
     fields: [
-      ["pant_length", "Length"],
-      ["pant_waist", "Waist"],
-      ["pant_hip", "Hip"],
-      ["pant_thigh", "Thigh"],
-      ["pant_bottom", "Bottom"],
+      ["pant_length", "Length", "ቁመት"],
+      ["pant_waist", "Waist", "ወገብ"],
+      ["pant_hip", "Hip", "ዳሌ"],
+      ["pant_thigh", "Thigh", "ጭን"],
+      ["pant_bottom", "Bottom", "ታች"],
     ],
   },
   {
     title: "Vest",
+    amharic: "ቬስት",
     fields: [
-      ["vest_length", "Length"],
-      ["vest_waist", "Waist"],
-      ["vest_chest", "Chest"],
+      ["vest_length", "Length", "ቁመት"],
+      ["vest_waist", "Waist", "ወገብ"],
+      ["vest_chest", "Chest", "ደረት"],
     ],
   },
 ] as const;
@@ -145,7 +148,9 @@ function NewOrderPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">New Order</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          New Order <span className="text-primary text-2xl font-bold">አዲስ ትዕዛዝ</span>
+        </h1>
         <p className="mt-1 text-muted-foreground">
           Capture customer info, order details and measurements.
         </p>
@@ -154,9 +159,9 @@ function NewOrderPage() {
       <form onSubmit={onSubmit} className="space-y-6">
         {/* Owner Selection for Superadmin */}
         {isSuperadmin && (
-          <Section title="Shop Owner">
+          <Section title="Shop Owner" amharic="የሱቅ ባለቤት">
             <div className="space-y-2">
-              <Label>Assign to Owner</Label>
+              <BilLabel en="Assign to Owner" am="ለባለቤት ይመድቡ" />
               <Select value={selectedOwnerId} onValueChange={setSelectedOwnerId} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select an owner" />
@@ -175,10 +180,10 @@ function NewOrderPage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Customer */}
-          <Section title="Customer Information" icon={UserIcon}>
+          <Section title="Customer Information" amharic="የደንበኛ መረጃ" icon={UserIcon}>
             <div className="grid gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full name</Label>
+                <BilLabel en="Full name" am="ሙሉ ስም" htmlFor="name" />
                 <Input
                   id="name"
                   placeholder="John Doe"
@@ -188,7 +193,7 @@ function NewOrderPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone number</Label>
+                <BilLabel en="Phone number" am="ስልክ ቁጥር" htmlFor="phone" />
                 <Input
                   id="phone"
                   placeholder="0911..."
@@ -201,11 +206,11 @@ function NewOrderPage() {
           </Section>
 
           {/* Order details */}
-          <Section title="Order Details" icon={Calendar}>
+          <Section title="Order Details" amharic="የትዕዛዝ ዝርዝር" icon={Calendar}>
             <div className="grid gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="total_price">Total price (ETB)</Label>
+                  <BilLabel en="Total price (ETB)" am="ጠቅላላ ዋጋ" htmlFor="total_price" />
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -221,7 +226,7 @@ function NewOrderPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="deposit">Deposit (ETB)</Label>
+                  <BilLabel en="Deposit (ETB)" am="ቅድሚያ ክፍያ" htmlFor="deposit" />
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -237,7 +242,7 @@ function NewOrderPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="appointment_date">Appointment / Delivery Date</Label>
+                <BilLabel en="Appointment / Delivery Date" am="ቀጠሮ / የርክክብ ቀን" htmlFor="appointment_date" />
                 <Input
                   id="appointment_date"
                   type="date"
@@ -253,15 +258,18 @@ function NewOrderPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-1 text-lg font-semibold">
             <Ruler className="h-5 w-5 text-primary" />
-            <h2>Measurements</h2>
+            <h2>Measurements <span className="text-primary text-base">መለኪያዎች</span></h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
             {measurementGroups.map((g) => (
-              <Section key={g.title} title={`${g.title}`}>
+              <Section key={g.title} title={g.title} amharic={g.amharic}>
                 <div className="space-y-4">
-                  {g.fields.map(([key, label]) => (
+                  {g.fields.map(([key, label, am]) => (
                     <div key={key} className="flex items-center justify-between gap-4">
-                      <Label htmlFor={key} className="text-muted-foreground">{label}</Label>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-semibold text-foreground">{label}</span>
+                        <span className="text-sm font-semibold text-primary">{am}</span>
+                      </div>
                       <div className="flex w-24 items-center gap-2">
                         <Input
                           id={key}
@@ -284,10 +292,10 @@ function NewOrderPage() {
         </div>
 
         {/* Design details at the end */}
-        <Section title="Design Specifications" icon={Palette}>
+        <Section title="Design Specifications" amharic="የዲዛይን ዝርዝሮች" icon={Palette}>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="coat_style">Coat style</Label>
+              <BilLabel en="Coat style" am="ካፖርት ስታይል" htmlFor="coat_style" />
               <Input
                 id="coat_style"
                 placeholder="e.g. Single breasted, 2 buttons"
@@ -296,7 +304,7 @@ function NewOrderPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pant_style">Pant style</Label>
+              <BilLabel en="Pant style" am="ሱሪ ስታይል" htmlFor="pant_style" />
               <Input
                 id="pant_style"
                 placeholder="e.g. Slim fit, no pleats"
@@ -305,7 +313,7 @@ function NewOrderPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="vest_style">Vest style</Label>
+              <BilLabel en="Vest style" am="ቬስት ስታይል" htmlFor="vest_style" />
               <Input
                 id="vest_style"
                 placeholder="e.g. 5 buttons, V-neck"
@@ -314,9 +322,7 @@ function NewOrderPage() {
               />
             </div>
             <div className="space-y-2 md:col-span-2 lg:col-span-3">
-              <Label htmlFor="notes" className="flex items-center gap-2">
-                <FileText className="h-4 w-4" /> Additional notes
-              </Label>
+              <BilLabel en="Additional notes" am="ተጨማሪ ማስታወሻ" htmlFor="notes" icon={<FileText className="h-4 w-4" />} />
               <Textarea
                 id="notes"
                 placeholder="Any other specific requirements, adjustments, or special fabric requests..."
@@ -326,9 +332,7 @@ function NewOrderPage() {
               />
             </div>
             <div className="space-y-2 md:col-span-2 lg:col-span-3">
-              <Label htmlFor="image" className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4" /> Reference image (optional)
-              </Label>
+              <BilLabel en="Reference image (optional)" am="የማጣቀሻ ምስል" htmlFor="image" icon={<ImageIcon className="h-4 w-4" />} />
               <div className="flex items-center gap-4">
                 <Input
                   id="image"
@@ -361,14 +365,31 @@ function NewOrderPage() {
   );
 }
 
-function Section({ title, children, icon: Icon }: { title: string; children: React.ReactNode; icon?: any }) {
+function Section({ title, amharic, children, icon: Icon }: { title: string; amharic?: string; children: React.ReactNode; icon?: any }) {
   return (
     <div className="rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-6 flex items-center gap-2 border-b pb-3">
         {Icon && <Icon className="h-4 w-4 text-primary" />}
-        <h2 className="font-semibold text-sm uppercase tracking-wider">{title}</h2>
+        <h2 className="font-bold text-sm uppercase tracking-wider text-foreground">{title}</h2>
+        {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
       </div>
       {children}
+    </div>
+  );
+}
+
+function BilLabel({
+  en, am, htmlFor, icon
+}: {
+  en: string; am: string; htmlFor?: string; icon?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 mb-1">
+      {icon && <span className="text-muted-foreground">{icon}</span>}
+      <Label htmlFor={htmlFor} className="flex items-center gap-1.5 cursor-pointer">
+        <span className="font-bold text-foreground">{en}</span>
+        <span className="font-bold text-primary">{am}</span>
+      </Label>
     </div>
   );
 }

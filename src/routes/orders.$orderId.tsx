@@ -243,20 +243,21 @@ function OrderDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {/* Customer */}
-          <Card title="Customer">
-            <Field label="Name" value={customer?.name} />
-            <Field label="Phone" value={customer?.phone} />
-            <Field label="Code" value={`#${customer?.unique_code ?? "—"}`} mono />
+          <Card title="Customer" amharic="ደንበኛ">
+            <Field label="Name" amharic="ስም" value={customer?.name} />
+            <Field label="Phone" amharic="ስልክ" value={customer?.phone} />
+            <Field label="Code" amharic="ኮድ" value={`#${customer?.unique_code ?? "—"}`} mono />
           </Card>
 
           {/* Order */}
-          <Card title="Order details">
+          <Card title="Order details" amharic="የትዕዛዝ ዝርዝር">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Total price" value={formatETB(order.total_price)} />
-              <Field label="Deposit" value={formatETB(order.deposit)} />
-              <Field label="Remaining" value={formatETB(order.remaining_price)} />
+              <Field label="Total price" amharic="ጠቅላላ ዋጋ" value={formatETB(order.total_price)} />
+              <Field label="Deposit" amharic="ቅድሚያ ክፍያ" value={formatETB(order.deposit)} />
+              <Field label="Remaining" amharic="ቀሪ ክፍያ" value={formatETB(order.remaining_price)} />
               <Field
                 label="Appointment"
+                amharic="ቀጠሮ"
                 value={
                   order.appointment_date
                     ? format(new Date(order.appointment_date), "MMM d, yyyy")
@@ -267,24 +268,24 @@ function OrderDetailPage() {
           </Card>
 
           {/* Design */}
-          <Card title="Design details">
+          <Card title="Design details" amharic="የዲዛይን ዝርዝር">
             {!design ? (
               <p className="text-sm text-muted-foreground">No design styles specified.</p>
             ) : (
               <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Coat style" value={design.coat_style} />
-                <Field label="Pant style" value={design.pant_style} />
-                <Field label="Vest style" value={design.vest_style} />
+                <Field label="Coat style" amharic="ካፖርት ስታይል" value={design.coat_style} />
+                <Field label="Pant style" amharic="ሱሪ ስታይል" value={design.pant_style} />
+                <Field label="Vest style" amharic="ቬስት ስታይል" value={design.vest_style} />
                 {design.notes && (
                   <div className="sm:col-span-3">
-                    <Field label="Notes" value={design.notes} />
+                    <Field label="Notes" amharic="ማስታወሻ" value={design.notes} />
                   </div>
                 )}
               </div>
             )}
             {order.design_image_url && (
               <div className="mt-4">
-                <Label className="mb-2 block">Reference Image</Label>
+                <Label className="mb-2 block">Reference Image / <span className="text-muted-foreground font-normal">የማጣቀሻ ምስል</span></Label>
                 <img
                   src={order.design_image_url}
                   alt="Design"
@@ -295,36 +296,39 @@ function OrderDetailPage() {
           </Card>
 
           {/* Measurements */}
-          <Card title="Measurements">
+          <Card title="Measurements" amharic="መለኪያዎች">
             {!measurements ? (
               <p className="text-sm text-muted-foreground">No measurements yet.</p>
             ) : (
               <div className="space-y-4">
                 <MGroup
                   title="Coat"
+                  amharic="ካፖርት"
                   data={[
-                    ["Length", measurements.coat_length],
-                    ["Waist", measurements.coat_waist],
-                    ["Chest", measurements.coat_chest],
-                    ["Shoulder", measurements.coat_shoulder],
+                    ["Length", "ቁመት", measurements.coat_length],
+                    ["Waist", "ወገብ", measurements.coat_waist],
+                    ["Chest", "ደረት", measurements.coat_chest],
+                    ["Shoulder", "ትከሻ", measurements.coat_shoulder],
                   ]}
                 />
                 <MGroup
                   title="Pant"
+                  amharic="ሱሪ"
                   data={[
-                    ["Length", measurements.pant_length],
-                    ["Waist", measurements.pant_waist],
-                    ["Hip", measurements.pant_hip],
-                    ["Thigh", measurements.pant_thigh],
-                    ["Bottom", measurements.pant_bottom],
+                    ["Length", "ቁመት", measurements.pant_length],
+                    ["Waist", "ወገብ", measurements.pant_waist],
+                    ["Hip", "ዳሌ", measurements.pant_hip],
+                    ["Thigh", "ጭን", measurements.pant_thigh],
+                    ["Bottom", "ታች", measurements.pant_bottom],
                   ]}
                 />
                 <MGroup
                   title="Vest"
+                  amharic="ቬስት"
                   data={[
-                    ["Length", measurements.vest_length],
-                    ["Waist", measurements.vest_waist],
-                    ["Chest", measurements.vest_chest],
+                    ["Length", "ቁመት", measurements.vest_length],
+                    ["Waist", "ወገብ", measurements.vest_waist],
+                    ["Chest", "ደረት", measurements.vest_chest],
                   ]}
                 />
               </div>
@@ -334,7 +338,7 @@ function OrderDetailPage() {
 
         <div className="space-y-6">
           {/* Tailor assignment */}
-          <Card title="Assigned tailor">
+          <Card title="Assigned tailor" amharic="የተመደበ ሰፊ">
             {tailor ? (
               <div>
                 <p className="font-medium">{tailor.fullName}</p>
@@ -367,7 +371,7 @@ function OrderDetailPage() {
           </Card>
 
           {/* Payments */}
-          <Card title="Payments">
+          <Card title="Payments" amharic="ክፍያዎች">
             <div className="space-y-2">
               {payment?.history?.length ? (
                 payment.history.map((p, i) => (
@@ -393,33 +397,45 @@ function OrderDetailPage() {
   );
 }
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+function Card({ title, amharic, children }: { title: string; amharic?: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl border bg-card p-6">
-      <h2 className="mb-4 font-semibold">{title}</h2>
+      <h2 className="mb-4 flex items-baseline gap-2">
+        <span className="text-base font-bold text-foreground">{title}</span>
+        {amharic && <span className="text-sm font-bold text-primary">{amharic}</span>}
+      </h2>
       {children}
     </div>
   );
 }
 
-function Field({ label, value, mono }: { label: string; value?: string | number | null; mono?: boolean }) {
+function Field({ label, amharic, value, mono }: { label: string; amharic?: string; value?: string | number | null; mono?: boolean }) {
   return (
     <div className="mb-3">
-      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className={`mt-1 ${mono ? "font-mono" : ""}`}>{value ?? "—"}</div>
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="text-xs font-bold uppercase tracking-wide text-foreground">{label}</span>
+        {amharic && <span className="text-xs font-bold text-primary">{amharic}</span>}
+      </div>
+      <div className={`text-sm font-medium ${mono ? "font-mono" : ""}`}>{value ?? "—"}</div>
     </div>
   );
 }
 
-function MGroup({ title, data }: { title: string; data: [string, number | undefined][] }) {
+function MGroup({ title, amharic, data }: { title: string; amharic?: string; data: [string, string, number | undefined][] }) {
   return (
     <div>
-      <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{title}</div>
+      <div className="mb-2 flex items-center gap-2">
+        <span className="text-xs font-bold uppercase tracking-wide text-foreground">{title}</span>
+        {amharic && <span className="text-xs font-bold text-primary">{amharic}</span>}
+      </div>
       <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-4">
-        {data.map(([k, v]) => (
+        {data.map(([k, am, v]) => (
           <div key={k} className="rounded-lg bg-muted/40 px-3 py-2 text-sm">
-            <div className="text-xs text-muted-foreground">{k}</div>
-            <div className="font-medium">{v ?? "—"}{v != null ? " cm" : ""}</div>
+            <div className="flex items-center gap-1 mb-1">
+              <span className="text-xs font-semibold text-foreground">{k}</span>
+              <span className="text-xs font-semibold text-primary">{am}</span>
+            </div>
+            <div className="font-bold text-foreground">{v ?? "—"}{v != null ? " cm" : ""}</div>
           </div>
         ))}
       </div>
