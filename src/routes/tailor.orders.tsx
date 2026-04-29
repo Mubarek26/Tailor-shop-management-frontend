@@ -147,16 +147,16 @@ function TailorOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             My Orders <span className="text-primary text-2xl font-bold">የእኔ ትዕዛዞች</span>
           </h1>
-          <p className="mt-1 text-muted-foreground">Orders assigned to you / ለእርስዎ የተሰጡ ትዕዛዞች</p>
+          <p className="mt-1 text-muted-foreground text-sm sm:text-base">Orders assigned to you / ለእርስዎ የተሰጡ ትዕዛዞች</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
           <Select value={ownerFilter} onValueChange={setOwnerFilter}>
-            <SelectTrigger className="w-[180px]"><SelectValue placeholder="All Owners" /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="All Owners" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Shops</SelectItem>
               {owners.map((o) => (
@@ -165,24 +165,26 @@ function TailorOrdersPage() {
             </SelectContent>
           </Select>
 
-          <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_progress">In progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Select value={filter} onValueChange={setFilter}>
+              <SelectTrigger className="flex-1 sm:w-[140px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All statuses</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_progress">In progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[160px]"><SelectValue placeholder="Time Range" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All time</SelectItem>
-              <SelectItem value="week">This Week</SelectItem>
-              <SelectItem value="month">This Month</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger className="flex-1 sm:w-[140px]"><SelectValue placeholder="Time Range" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All time</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

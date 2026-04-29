@@ -102,50 +102,52 @@ function OrdersListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
-          <p className="mt-1 text-muted-foreground">Manage all suit orders.</p>
+          <p className="mt-1 text-muted-foreground text-sm sm:text-base">Manage all suit orders.</p>
         </div>
-        <Link to="/orders/new">
-          <Button className="bg-[image:var(--gradient-primary)]">
+        <Link to="/orders/new" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto bg-[image:var(--gradient-primary)]">
             <Plus className="mr-2 h-4 w-4" /> New Order
           </Button>
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-3 rounded-xl border bg-card p-4">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-col sm:flex-row gap-3 rounded-xl border bg-card p-4">
+        <div className="relative w-full sm:flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search by customer, phone, code, ID..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="pl-9"
+            className="pl-9 w-full"
           />
         </div>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="in_progress">In progress</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger className="flex-1 sm:w-[160px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="in_progress">In progress</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
 
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Time Range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All time</SelectItem>
-            <SelectItem value="week">This Week</SelectItem>
-            <SelectItem value="month">This Month</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="flex-1 sm:w-[160px]">
+              <SelectValue placeholder="Time Range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All time</SelectItem>
+              <SelectItem value="week">This Week</SelectItem>
+              <SelectItem value="month">This Month</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="rounded-xl border bg-card overflow-hidden">
