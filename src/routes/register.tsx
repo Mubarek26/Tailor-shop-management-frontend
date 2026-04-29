@@ -48,10 +48,10 @@ function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background items-start">
       {/* Left side: Form */}
-      <div className="flex w-full lg:w-1/2 flex-col justify-center px-6 py-12 sm:px-12 lg:px-16 xl:px-24 order-2 lg:order-1 overflow-y-auto max-h-screen">
-        <div className="mx-auto w-full max-w-sm lg:max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-700 py-6">
+      <div className="w-full lg:w-1/2 px-4 py-12 sm:px-8 lg:px-12 xl:px-16 order-2 lg:order-1">
+        <div className="mx-auto w-full max-w-md lg:max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           {/* Logo for mobile */}
           <div className="lg:hidden mb-10 text-center">
             <Link to="/" className="inline-flex items-center gap-3 text-foreground justify-center">
@@ -62,14 +62,14 @@ function RegisterPage() {
             </Link>
           </div>
 
-          <div className="mb-10 text-center lg:text-left">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">Open your shop</h1>
+          <div className="mb-6 pt-8 text-center lg:text-left">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">Open your shop</h1>
             <p className="mt-3 text-base text-muted-foreground">
               Register as a tailor shop owner. Your account will be reviewed before activation.
             </p>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-5">
+          <form onSubmit={onSubmit} className="space-y-4">
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="fullName" className="text-sm font-medium">Full name</Label>
@@ -103,7 +103,7 @@ function RegisterPage() {
 
             <Button
               type="submit"
-              className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-[image:var(--gradient-primary)] hover:opacity-90 mt-6"
+              className="w-full h-11 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-[image:var(--gradient-primary)] hover:opacity-90 mt-4"
               disabled={loading}
             >
               {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
@@ -111,7 +111,7 @@ function RegisterPage() {
             </Button>
           </form>
 
-          <p className="mt-10 text-center text-sm text-muted-foreground">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link to="/login" className="font-semibold text-primary hover:text-primary/80 transition-colors">
               Sign in
@@ -121,7 +121,7 @@ function RegisterPage() {
       </div>
 
       {/* Right side: Image + Overlay */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-900 overflow-hidden order-1 lg:order-2">
+      <div className="hidden lg:block lg:w-1/2 relative bg-zinc-900 overflow-hidden order-1 lg:order-2 lg:sticky lg:top-0 lg:h-screen">
         <img
           src="https://images.unsplash.com/photo-1558024920-b41e1887dc32?q=80&w=2000&auto=format&fit=crop"
           alt="Tailor shop"
