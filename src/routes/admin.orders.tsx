@@ -100,14 +100,14 @@ function AllOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">All Orders</h1>
-          <p className="mt-1 text-muted-foreground">System-wide orders across all shops.</p>
+          <p className="mt-1 text-muted-foreground text-sm sm:text-base">System-wide orders across all shops.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[180px]"><SelectValue placeholder="Time Range" /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Time Range" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All time</SelectItem>
               <SelectItem value="week">This Week</SelectItem>
@@ -115,7 +115,7 @@ function AllOrdersPage() {
             </SelectContent>
           </Select>
           <Select value={ownerId} onValueChange={setOwnerId}>
-            <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-[200px]"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All shops</SelectItem>
               {owners.map((o) => (
@@ -139,8 +139,52 @@ function AllOrdersPage() {
             <p className="font-medium">No orders</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Mobile View: List of Cards */}
+            <div className="grid gap-3 p-3 md:hidden">
+              {filteredOrders.map((o) => {
+                const c = o.customer_id as Customer;
+                const ow = o.owner_id as User | undefined;
+                return (
+                  <Link key={o._id} to="/orders/$orderId" params={{ orderId: o._id }}>
+                    <div className="group rounded-xl border bg-card p-4 transition-all active:scale-[0.98] hover:border-primary/50">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                            #{c?.unique_code ?? "—"}
+                          </div>
+                          <div className="mt-1 font-bold text-foreground group-hover:text-primary transition-colors">
+                            {c?.name ?? "—"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground mt-0.5">
+                             Shop: <span className="font-medium text-foreground">{typeof ow === "object" ? ow?.fullName : "—"}</span>
+                          </div>
+                        </div>
+                        <StatusBadge status={o.status} />
+                      </div>
+                      
+                      <div className="flex items-center justify-between border-t border-muted/50 pt-3">
+                        <div className="space-y-1">
+                          <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Total</div>
+                          <div className="text-xs font-bold text-foreground">{formatETB(o.total_price)}</div>
+                        </div>
+                        <div className="text-right space-y-1">
+                          <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Appointment</div>
+                          <div className={`text-xs font-bold ${isOverdue(o) ? "text-destructive" : "text-foreground"}`}>
+                            {o.appointment_date ? format(new Date(o.appointment_date), "MMM d") : "—"}
+                            {isOverdue(o) && <span className="ml-1 text-[8px] font-black uppercase text-destructive">!</span>}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Customer</th>
@@ -185,7 +229,8 @@ function AllOrdersPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </>
+      )}
         {!loading && orders.length > 0 && (
           <Pagination 
             page={page} 

@@ -219,7 +219,7 @@ function AddTailorDialog({ onDone }: { onDone: () => void }) {
           <Plus className="mr-2 h-4 w-4" /> Add tailor
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add a tailor</DialogTitle>
         </DialogHeader>
@@ -230,7 +230,7 @@ function AddTailorDialog({ onDone }: { onDone: () => void }) {
           </TabsList>
           <TabsContent value="create">
             <form onSubmit={onCreate} className="space-y-3 pt-3">
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label>Full name</Label>
                   <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} required />

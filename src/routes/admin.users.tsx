@@ -337,42 +337,42 @@ function UsersAdminPage() {
 
       {/* View Modal */}
       <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>User Details</DialogTitle>
             <DialogDescription>Full information about this user account.</DialogDescription>
           </DialogHeader>
           {selectedUser && (
             <div className="space-y-4 py-4">
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Full Name</span>
-                <span className="col-span-2 text-sm">{selectedUser.fullName}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Full Name</span>
+                <span className="sm:col-span-2 text-sm font-semibold">{selectedUser.fullName}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Email</span>
-                <span className="col-span-2 text-sm">{selectedUser.email || "N/A"}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Email</span>
+                <span className="sm:col-span-2 text-sm truncate">{selectedUser.email || "N/A"}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Phone</span>
-                <span className="col-span-2 text-sm">{selectedUser.phoneNumber}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Phone</span>
+                <span className="sm:col-span-2 text-sm">{selectedUser.phoneNumber}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Role</span>
-                <span className="col-span-2 text-sm capitalize">{selectedUser.role}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Role</span>
+                <span className="sm:col-span-2 text-sm capitalize">{selectedUser.role}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Status</span>
-                <span className="col-span-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Status</span>
+                <span className="sm:col-span-2">
                   {selectedUser.status ? <StatusBadge status={selectedUser.status} /> : "N/A"}
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Address</span>
-                <span className="col-span-2 text-sm">{selectedUser.address || "N/A"}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 border-b border-muted/30 pb-2 sm:pb-0 sm:border-0">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Address</span>
+                <span className="sm:col-span-2 text-sm">{selectedUser.address || "N/A"}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm font-medium text-muted-foreground">Joined</span>
-                <span className="col-span-2 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Joined</span>
+                <span className="sm:col-span-2 text-sm">
                   {selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : "N/A"}
                 </span>
               </div>
@@ -383,7 +383,7 @@ function UsersAdminPage() {
 
       {/* Edit Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
             <DialogDescription>Modify user account details.</DialogDescription>
@@ -414,7 +414,7 @@ function UsersAdminPage() {
                 onChange={(e) => setEditForm({ ...editForm, phoneNumber: e.target.value })}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="edit-role">Role</Label>
                 <Select
@@ -457,11 +457,11 @@ function UsersAdminPage() {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleUpdateUser} disabled={isSaving}>
+            <Button onClick={handleUpdateUser} disabled={isSaving} className="w-full sm:w-auto bg-[image:var(--gradient-primary)]">
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Changes
             </Button>
