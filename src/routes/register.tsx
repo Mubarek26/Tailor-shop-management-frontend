@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Scissors, Loader2 } from "lucide-react";
+import { Scissors, Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/register")({
@@ -24,6 +24,8 @@ function RegisterPage() {
   });
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const upd = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -89,11 +91,45 @@ function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                <Input id="password" type="password" value={form.password} onChange={(e) => upd("password", e.target.value)} required minLength={8} className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all" />
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type={showPassword ? "text" : "password"} 
+                    value={form.password} 
+                    onChange={(e) => upd("password", e.target.value)} 
+                    required 
+                    minLength={8} 
+                    className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="passwordConfirm" className="text-sm font-medium">Confirm password</Label>
-                <Input id="passwordConfirm" type="password" value={form.passwordConfirm} onChange={(e) => upd("passwordConfirm", e.target.value)} required minLength={8} className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all" />
+                <div className="relative">
+                  <Input 
+                    id="passwordConfirm" 
+                    type={showConfirmPassword ? "text" : "password"} 
+                    value={form.passwordConfirm} 
+                    onChange={(e) => upd("passwordConfirm", e.target.value)} 
+                    required 
+                    minLength={8} 
+                    className="h-12 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all pr-12" 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="photo" className="text-sm font-medium">Profile photo (optional)</Label>

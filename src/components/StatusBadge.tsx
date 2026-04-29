@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils";
 type Status = "pending" | "in_progress" | "completed" | string;
 
 const styles: Record<string, string> = {
-  pending: "bg-warning/15 text-warning-foreground border-warning/30 [&]:text-[oklch(0.45_0.12_70)]",
-  in_progress: "bg-info/15 border-info/30 [&]:text-[oklch(0.45_0.15_245)]",
-  completed: "bg-success/15 border-success/30 [&]:text-[oklch(0.4_0.13_155)]",
-  approved: "bg-success/15 border-success/30 [&]:text-[oklch(0.4_0.13_155)]",
-  rejected: "bg-destructive/15 border-destructive/30 text-destructive",
+  pending: "bg-warning/15 text-warning-foreground border-warning/30 dark:bg-warning/10 dark:text-warning dark:border-warning/20",
+  in_progress: "bg-info/15 border-info/30 [&]:text-[oklch(0.45_0.15_245)] dark:[&]:text-[var(--info)] dark:bg-info/10 dark:border-info/20",
+  completed: "bg-success/15 border-success/30 [&]:text-[oklch(0.4_0.13_155)] dark:[&]:text-[var(--success)] dark:bg-success/10 dark:border-success/20",
+  approved: "bg-success/15 border-success/30 [&]:text-[oklch(0.4_0.13_155)] dark:[&]:text-[var(--success)] dark:bg-success/10 dark:border-success/20",
+  rejected: "bg-destructive/15 text-destructive border-destructive/30 dark:bg-destructive/10 dark:text-destructive dark:border-destructive/20",
 };
 
 const labels: Record<string, string> = {

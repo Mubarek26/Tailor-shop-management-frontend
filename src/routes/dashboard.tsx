@@ -46,9 +46,9 @@ interface Summary {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending: "oklch(0.78 0.15 75)",
-  in_progress: "oklch(0.62 0.16 245)",
-  completed: "oklch(0.65 0.16 155)",
+  pending: "var(--warning)",
+  in_progress: "var(--info)",
+  completed: "var(--success)",
 };
 
 function DashboardPage() {
@@ -84,9 +84,9 @@ function DashboardPage() {
   }));
 
   const cards = [
-    { label: "Total Orders", value: summary?.total_orders ?? 0, icon: ShoppingBag, color: "text-info", isCurrency: false },
+    { label: "Total Orders", value: summary?.total_orders ?? 0, icon: ShoppingBag, color: "text-info dark:text-info", isCurrency: false },
     { label: "Revenue", value: summary?.total_revenue ?? 0, icon: TrendingUp, color: "text-accent", isCurrency: true },
-    { label: "Deposits", value: summary?.total_deposit ?? 0, icon: Wallet, color: "text-warning-foreground", isCurrency: true },
+    { label: "Deposits", value: summary?.total_deposit ?? 0, icon: Wallet, color: "text-warning-foreground dark:text-warning", isCurrency: true },
     { label: "Outstanding", value: summary?.total_remaining ?? 0, icon: CircleDollarSign, color: "text-destructive", isCurrency: true },
   ];
 
@@ -157,31 +157,33 @@ function DashboardPage() {
                     <AreaChart data={revenue}>
                       <defs>
                         <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="oklch(0.65 0.13 175)" stopOpacity={0.5} />
-                          <stop offset="100%" stopColor="oklch(0.65 0.13 175)" stopOpacity={0} />
+                          <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.5} />
+                          <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.9 0.012 250)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                       <XAxis
                         dataKey={(d) => d.date || d._id || d.period || ""}
                         tick={{ fontSize: 11 }}
-                        stroke="oklch(0.5 0.03 250)"
+                        stroke="var(--muted-foreground)"
                       />
-                      <YAxis tick={{ fontSize: 11 }} stroke="oklch(0.5 0.03 250)" />
+                      <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                       <Tooltip
                         contentStyle={{
-                          background: "oklch(1 0 0)",
-                          border: "1px solid oklch(0.9 0.012 250)",
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
                           borderRadius: 8,
                           fontSize: 12,
+                          color: "var(--foreground)",
                         }}
+                        itemStyle={{ color: "var(--foreground)" }}
                         formatter={(v: any) => formatETB(Number(v))}
                       />
                       <Area
                         type="monotone"
                         dataKey={(d) => d.paid_total ?? 0}
                         name="Revenue"
-                        stroke="oklch(0.5 0.13 175)"
+                        stroke="var(--accent)"
                         strokeWidth={2}
                         fill="url(#revFill)"
                       />
@@ -216,11 +218,13 @@ function DashboardPage() {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          background: "oklch(1 0 0)",
-                          border: "1px solid oklch(0.9 0.012 250)",
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
                           borderRadius: 8,
                           fontSize: 12,
+                          color: "var(--foreground)",
                         }}
+                        itemStyle={{ color: "var(--foreground)" }}
                       />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                     </PieChart>
