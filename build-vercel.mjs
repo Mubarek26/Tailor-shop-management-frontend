@@ -1,71 +1,105 @@
-/**
- * Post-build script: converts TanStack Start dist/ output into
- * Vercel Build Output API format at .vercel/output/
- *
- * dist/client/  -> .vercel/output/static/
- * dist/server/  -> .vercel/output/functions/index.func/
- */
 import { cpSync, mkdirSync, writeFileSync, rmSync } from "fs";
 import { resolve } from "path";
+import { build } from "esbuild";
 
 const root = process.cwd();
 const out = resolve(root, ".vercel/output");
 
-// Clean previous output
 rmSync(out, { recursive: true, force: true });
 
-// 1. Static files: dist/client → .vercel/output/static
+// 1. Static files
 console.log("📁 Copying static files...");
 mkdirSync(`${out}/static`, { recursive: true });
 cpSync(resolve(root, "dist/client"), `${out}/static`, { recursive: true });
 
-// 2. Edge function: dist/server → .vercel/output/functions/index.func
-console.log("⚡ Building edge function...");
+// 2. Bundle SSR server into a single Node.js CJS file
+console.log("📦 Bundling SSR server...");
 const funcDir = `${out}/functions/index.func`;
 mkdirSync(funcDir, { recursive: true });
 
-// Copy all server files (server.js + assets/)
-cpSync(resolve(root, "dist/server"), funcDir, { recursive: true });
-
-// Write the entry point wrapper: re-exports server.default.fetch
-// Vercel Edge functions must export a default fetch handler
+// Write a Node.js HTTP adapter next to server.js (so relative imports resolve)
+const adapterPath = resolve(root, "dist/server/_entry.mjs");
 writeFileSync(
-  `${funcDir}/entry.js`,
-  `import handler from './server.js';
-export default handler.fetch.bind(handler);
+  adapterPath,
+  `import server from './server.js';
+
+export default async function handler(req, res) {
+  const proto = req.headers['x-forwarded-proto'] || 'https';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
+  const url = new URL(req.url, proto + '://' + host);
+
+  const headers = new Headers();
+  for (const [key, val] of Object.entries(req.headers)) {
+    if (typeof val === 'string') headers.set(key, val);
+    else if (Array.isArray(val)) val.forEach(v => headers.append(key, v));
+  }
+
+  const method = req.method.toUpperCase();
+  const hasBody = !['GET', 'HEAD'].includes(method);
+
+  const webReq = new Request(url.toString(), {
+    method,
+    headers,
+    body: hasBody ? req : undefined,
+    ...(hasBody ? { duplex: 'half' } : {}),
+  });
+
+  const response = await server.fetch(webReq);
+
+  res.statusCode = response.status;
+  response.headers.forEach((value, key) => res.setHeader(key, value));
+
+  if (response.body) {
+    const reader = response.body.getReader();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        res.write(value);
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+  res.end();
+}
 `
 );
 
-// Write Vercel function config (Edge runtime)
+// Bundle everything (server.js + all npm deps) into one CJS file
+await build({
+  entryPoints: [adapterPath],
+  bundle: true,
+  platform: "node",
+  target: "node20",
+  outfile: `${funcDir}/index.js`,
+  format: "cjs",
+  external: ["node:*"],
+  logLevel: "warning",
+});
+
+rmSync(adapterPath);
+
+// 3. Function config — Node.js runtime
 writeFileSync(
   `${funcDir}/.vc-config.json`,
-  JSON.stringify(
-    {
-      runtime: "edge",
-      entrypoint: "entry.js",
-    },
-    null,
-    2
-  )
+  JSON.stringify({ runtime: "nodejs20.x", handler: "index.js", launcherType: "Nodejs" }, null, 2)
 );
 
-// 3. Output config: route all non-static requests to the edge function
-console.log("🔧 Writing Vercel output config...");
+// 4. Vercel routing config
+console.log("🔧 Writing output config...");
 writeFileSync(
   `${out}/config.json`,
   JSON.stringify(
     {
       version: 3,
       routes: [
-        // Static assets — serve directly
         {
           src: "^/assets/(.*)$",
           headers: { "cache-control": "public, max-age=31536000, immutable" },
           continue: true,
         },
-        // Filesystem check (serves files from /static that exist)
         { handle: "filesystem" },
-        // Everything else → SSR edge function
         { src: "/(.*)", dest: "/index" },
       ],
     },
