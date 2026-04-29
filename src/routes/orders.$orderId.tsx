@@ -219,17 +219,22 @@ function OrderDetailPage() {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-                Order #{customer?.unique_code ?? order._id.slice(-6)}
-              </h1>
-              <StatusBadge status={order.status} />
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
+                  {customer?.name ?? "Order Details"}
+                </h1>
+                <StatusBadge status={order.status} />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-lg font-black text-primary bg-primary/5 px-3 py-1 rounded-lg border-2 border-primary/20 shadow-sm">
+                  Order #{customer?.unique_code ?? order._id.slice(-6)}
+                </span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                  • {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy") : "—"}
+                </span>
+              </div>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Placed on {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy") : "—"}
-            </p>
-          </div>
         </div>
 
         <div className="flex items-center gap-2">

@@ -207,7 +207,7 @@ function TailorOrdersPage() {
               <div key={o._id} className="rounded-xl border bg-card p-5 transition-shadow hover:shadow-[var(--shadow-md)]">
                 <div className="flex items-start justify-between">
                   <div>
-                    <div className="font-mono text-xs text-muted-foreground">#{c?.unique_code ?? o._id.slice(-6)}</div>
+                    <div className="font-mono text-base font-black text-primary uppercase tracking-tight">#{c?.unique_code ?? o._id.slice(-6)}</div>
                     <div className="mt-1 font-semibold">{c?.name ?? "—"}</div>
                     <div className="text-xs text-muted-foreground">{c?.phone}</div>
                   </div>

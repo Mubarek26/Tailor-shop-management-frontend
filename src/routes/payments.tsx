@@ -87,7 +87,7 @@ function PaymentsPage() {
                     <div className="group rounded-xl border bg-card p-4 transition-all active:scale-[0.98] hover:border-primary/50">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                          <div className="font-mono text-base font-black text-primary uppercase tracking-tight">
                             #{c?.unique_code ?? "—"}
                           </div>
                           <div className="mt-1 font-bold text-foreground group-hover:text-primary transition-colors">
@@ -122,6 +122,7 @@ function PaymentsPage() {
               <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
+                  <th className="px-4 py-3 font-medium">Order</th>
                   <th className="px-4 py-3 font-medium">Customer</th>
                   <th className="px-4 py-3 font-medium">Total</th>
                   <th className="px-4 py-3 font-medium">Deposit</th>
@@ -135,9 +136,9 @@ function PaymentsPage() {
                   const c = o.customer_id as Customer;
                   return (
                     <tr key={o._id} className="hover:bg-muted/30">
+                      <td className="px-4 py-3 font-mono text-base font-black text-primary">#{c?.unique_code ?? "—"}</td>
                       <td className="px-4 py-3">
                         <div className="font-medium">{c?.name ?? "—"}</div>
-                        <div className="text-xs text-muted-foreground">#{c?.unique_code}</div>
                       </td>
                       <td className="px-4 py-3">{formatETB(o.total_price)}</td>
                       <td className="px-4 py-3 text-muted-foreground">{formatETB(o.deposit)}</td>
