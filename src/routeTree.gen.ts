@@ -8,23 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root.tsx'
-import { Route as TailorsRouteImport } from './routes/tailors.tsx'
-import { Route as SettingsRouteImport } from './routes/settings.tsx'
-import { Route as RegisterRouteImport } from './routes/register.tsx'
-import { Route as PaymentsRouteImport } from './routes/payments.tsx'
-import { Route as LoginRouteImport } from './routes/login.tsx'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password.tsx'
-import { Route as DashboardRouteImport } from './routes/dashboard.tsx'
-import { Route as CustomersRouteImport } from './routes/customers.tsx'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as TailorsRouteImport } from './routes/tailors'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RegistrationSuccessRouteImport } from './routes/registration-success'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as OrdersIndexRouteImport } from './routes/orders.index.tsx'
-import { Route as TailorOrdersRouteImport } from './routes/tailor.orders.tsx'
-import { Route as ResetPasswordTokenRouteImport } from './routes/resetPassword.$token.tsx'
-import { Route as OrdersNewRouteImport } from './routes/orders.new.tsx'
-import { Route as OrdersOrderIdRouteImport } from './routes/orders.$orderId.tsx'
-import { Route as AdminUsersRouteImport } from './routes/admin.users.tsx'
-import { Route as AdminOrdersRouteImport } from './routes/admin.orders.tsx'
+import { Route as OrdersIndexRouteImport } from './routes/orders.index'
+import { Route as VerifyEmailTokenRouteImport } from './routes/verify-email.$token'
+import { Route as TailorOrdersRouteImport } from './routes/tailor.orders'
+import { Route as ResetPasswordTokenRouteImport } from './routes/resetPassword.$token'
+import { Route as OrdersNewRouteImport } from './routes/orders.new'
+import { Route as OrdersOrderIdRouteImport } from './routes/orders.$orderId'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 
 const TailorsRoute = TailorsRouteImport.update({
   id: '/tailors',
@@ -34,6 +36,11 @@ const TailorsRoute = TailorsRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistrationSuccessRoute = RegistrationSuccessRouteImport.update({
+  id: '/registration-success',
+  path: '/registration-success',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -76,6 +83,11 @@ const OrdersIndexRoute = OrdersIndexRouteImport.update({
   path: '/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailTokenRoute = VerifyEmailTokenRouteImport.update({
+  id: '/verify-email/$token',
+  path: '/verify-email/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TailorOrdersRoute = TailorOrdersRouteImport.update({
   id: '/tailor/orders',
   path: '/tailor/orders',
@@ -115,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/register': typeof RegisterRoute
+  '/registration-success': typeof RegistrationSuccessRoute
   '/settings': typeof SettingsRoute
   '/tailors': typeof TailorsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -123,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/orders/new': typeof OrdersNewRoute
   '/resetPassword/$token': typeof ResetPasswordTokenRoute
   '/tailor/orders': typeof TailorOrdersRoute
+  '/verify-email/$token': typeof VerifyEmailTokenRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -133,6 +147,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/register': typeof RegisterRoute
+  '/registration-success': typeof RegistrationSuccessRoute
   '/settings': typeof SettingsRoute
   '/tailors': typeof TailorsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -141,6 +156,7 @@ export interface FileRoutesByTo {
   '/orders/new': typeof OrdersNewRoute
   '/resetPassword/$token': typeof ResetPasswordTokenRoute
   '/tailor/orders': typeof TailorOrdersRoute
+  '/verify-email/$token': typeof VerifyEmailTokenRoute
   '/orders': typeof OrdersIndexRoute
 }
 export interface FileRoutesById {
@@ -152,6 +168,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/register': typeof RegisterRoute
+  '/registration-success': typeof RegistrationSuccessRoute
   '/settings': typeof SettingsRoute
   '/tailors': typeof TailorsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -160,63 +177,70 @@ export interface FileRoutesById {
   '/orders/new': typeof OrdersNewRoute
   '/resetPassword/$token': typeof ResetPasswordTokenRoute
   '/tailor/orders': typeof TailorOrdersRoute
+  '/verify-email/$token': typeof VerifyEmailTokenRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-  | '/'
-  | '/customers'
-  | '/dashboard'
-  | '/forgot-password'
-  | '/login'
-  | '/payments'
-  | '/register'
-  | '/settings'
-  | '/tailors'
-  | '/admin/orders'
-  | '/admin/users'
-  | '/orders/$orderId'
-  | '/orders/new'
-  | '/resetPassword/$token'
-  | '/tailor/orders'
-  | '/orders/'
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/login'
+    | '/payments'
+    | '/register'
+    | '/registration-success'
+    | '/settings'
+    | '/tailors'
+    | '/admin/orders'
+    | '/admin/users'
+    | '/orders/$orderId'
+    | '/orders/new'
+    | '/resetPassword/$token'
+    | '/tailor/orders'
+    | '/verify-email/$token'
+    | '/orders/'
   fileRoutesByTo: FileRoutesByTo
   to:
-  | '/'
-  | '/customers'
-  | '/dashboard'
-  | '/forgot-password'
-  | '/login'
-  | '/payments'
-  | '/register'
-  | '/settings'
-  | '/tailors'
-  | '/admin/orders'
-  | '/admin/users'
-  | '/orders/$orderId'
-  | '/orders/new'
-  | '/resetPassword/$token'
-  | '/tailor/orders'
-  | '/orders'
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/login'
+    | '/payments'
+    | '/register'
+    | '/registration-success'
+    | '/settings'
+    | '/tailors'
+    | '/admin/orders'
+    | '/admin/users'
+    | '/orders/$orderId'
+    | '/orders/new'
+    | '/resetPassword/$token'
+    | '/tailor/orders'
+    | '/verify-email/$token'
+    | '/orders'
   id:
-  | '__root__'
-  | '/'
-  | '/customers'
-  | '/dashboard'
-  | '/forgot-password'
-  | '/login'
-  | '/payments'
-  | '/register'
-  | '/settings'
-  | '/tailors'
-  | '/admin/orders'
-  | '/admin/users'
-  | '/orders/$orderId'
-  | '/orders/new'
-  | '/resetPassword/$token'
-  | '/tailor/orders'
-  | '/orders/'
+    | '__root__'
+    | '/'
+    | '/customers'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/login'
+    | '/payments'
+    | '/register'
+    | '/registration-success'
+    | '/settings'
+    | '/tailors'
+    | '/admin/orders'
+    | '/admin/users'
+    | '/orders/$orderId'
+    | '/orders/new'
+    | '/resetPassword/$token'
+    | '/tailor/orders'
+    | '/verify-email/$token'
+    | '/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -227,6 +251,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PaymentsRoute: typeof PaymentsRoute
   RegisterRoute: typeof RegisterRoute
+  RegistrationSuccessRoute: typeof RegistrationSuccessRoute
   SettingsRoute: typeof SettingsRoute
   TailorsRoute: typeof TailorsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
@@ -235,6 +260,7 @@ export interface RootRouteChildren {
   OrdersNewRoute: typeof OrdersNewRoute
   ResetPasswordTokenRoute: typeof ResetPasswordTokenRoute
   TailorOrdersRoute: typeof TailorOrdersRoute
+  VerifyEmailTokenRoute: typeof VerifyEmailTokenRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
 }
 
@@ -252,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registration-success': {
+      id: '/registration-success'
+      path: '/registration-success'
+      fullPath: '/registration-success'
+      preLoaderRoute: typeof RegistrationSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -310,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email/$token': {
+      id: '/verify-email/$token'
+      path: '/verify-email/$token'
+      fullPath: '/verify-email/$token'
+      preLoaderRoute: typeof VerifyEmailTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tailor/orders': {
       id: '/tailor/orders'
       path: '/tailor/orders'
@@ -363,6 +403,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PaymentsRoute: PaymentsRoute,
   RegisterRoute: RegisterRoute,
+  RegistrationSuccessRoute: RegistrationSuccessRoute,
   SettingsRoute: SettingsRoute,
   TailorsRoute: TailorsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
@@ -371,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersNewRoute: OrdersNewRoute,
   ResetPasswordTokenRoute: ResetPasswordTokenRoute,
   TailorOrdersRoute: TailorOrdersRoute,
+  VerifyEmailTokenRoute: VerifyEmailTokenRoute,
   OrdersIndexRoute: OrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
