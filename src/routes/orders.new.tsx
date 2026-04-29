@@ -101,6 +101,11 @@ function NewOrderPage() {
         }
         fd.append("owner_id", selectedOwnerId);
       }
+      if (!image) {
+        toast.error("Reference image is required / የማጣቀሻ ምስል ያስፈልጋል");
+        setLoading(false);
+        return;
+      }
       fd.append("name", customer.name);
       fd.append("phone", customer.phone);
       fd.append("total_price", order.total_price);
@@ -332,13 +337,14 @@ function NewOrderPage() {
               />
             </div>
             <div className="space-y-2 md:col-span-2 lg:col-span-3">
-              <BilLabel en="Reference image (optional)" am="የማጣቀሻ ምስል" htmlFor="image" icon={<ImageIcon className="h-4 w-4" />} />
+              <BilLabel en="Reference image" am="የማጣቀሻ ምስል *" htmlFor="image" icon={<ImageIcon className="h-4 w-4" />} />
               <div className="flex items-center gap-4">
                 <Input
                   id="image"
                   type="file"
                   accept="image/*"
                   className="max-w-xs cursor-pointer"
+                  required
                   onChange={(e) => setImage(e.target.files?.[0] || null)}
                 />
                 {image && (

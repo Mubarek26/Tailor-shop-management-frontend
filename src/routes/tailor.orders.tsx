@@ -149,8 +149,10 @@ function TailorOrdersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Orders</h1>
-          <p className="mt-1 text-muted-foreground">Orders assigned to you.</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            My Orders <span className="text-primary text-2xl font-bold">የእኔ ትዕዛዞች</span>
+          </h1>
+          <p className="mt-1 text-muted-foreground">Orders assigned to you / ለእርስዎ የተሰጡ ትዕዛዞች</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Select value={ownerFilter} onValueChange={setOwnerFilter}>
@@ -221,8 +223,8 @@ function TailorOrdersPage() {
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <Button size="sm" variant="outline" className="flex-1" onClick={() => openOrder(o)}>
-                    Details
+                  <Button size="sm" variant="outline" className="flex-1 font-bold" onClick={() => openOrder(o)}>
+                    Details / ዝርዝር
                   </Button>
                   <Select value={o.status} onValueChange={(v) => updateStatus(o._id, v)}>
                     <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
@@ -253,29 +255,42 @@ function TailorOrdersPage() {
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Order details</SheetTitle>
-            <SheetDescription>Read-only view</SheetDescription>
+            <SheetTitle className="flex items-center gap-2">
+              <span className="font-bold">Order details</span>
+              <span className="text-primary font-bold">የትዕዛዝ ዝርዝር</span>
+            </SheetTitle>
+            <SheetDescription>Read-only view / ለማንበብ ብቻ</SheetDescription>
           </SheetHeader>
           {selected && (
             <div className="mt-8 space-y-8">
               {/* Customer Info */}
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-primary">
-                  <UserIcon className="h-5 w-5" />
-                  <h3 className="text-lg font-bold">Customer</h3>
+                <div className="flex items-center gap-2">
+                  <UserIcon className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-bold text-foreground">Customer</h3>
+                  <span className="text-lg font-bold text-primary">ደንበኛ</span>
                 </div>
                 <div className="grid grid-cols-2 gap-4 rounded-xl border bg-muted/20 p-4">
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Full Name</div>
-                    <div className="text-base font-semibold">{(selected.customer_id as Customer)?.name}</div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">Full Name</span>
+                      <span className="text-[10px] font-bold text-primary">ሙሉ ስም</span>
+                    </div>
+                    <div className="text-base font-bold text-foreground">{(selected.customer_id as Customer)?.name}</div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Phone Number</div>
-                    <div className="text-base font-medium">{(selected.customer_id as Customer)?.phone}</div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">Phone Number</span>
+                      <span className="text-[10px] font-bold text-primary">ስልክ ቁጥር</span>
+                    </div>
+                    <div className="text-base font-bold text-foreground">{(selected.customer_id as Customer)?.phone}</div>
                   </div>
                   <div className="col-span-2">
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Appointment</div>
-                    <div className={`flex items-center gap-2 text-base font-medium ${isOverdue(selected) ? "text-destructive font-bold" : ""}`}>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">Appointment</span>
+                      <span className="text-[10px] font-bold text-primary">ቀጠሮ</span>
+                    </div>
+                    <div className={`flex items-center gap-2 text-base font-bold ${isOverdue(selected) ? "text-destructive" : "text-foreground"}`}>
                       <Calendar className={`h-4 w-4 ${isOverdue(selected) ? "text-destructive" : "text-muted-foreground"}`} />
                       {selected.appointment_date ? format(new Date(selected.appointment_date), "PPPP") : "No date set"}
                       {isOverdue(selected) && (
@@ -292,15 +307,17 @@ function TailorOrdersPage() {
 
               {/* Design styles */}
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-primary">
-                  <Scissors className="h-5 w-5" />
-                  <h3 className="text-lg font-bold">Design Details</h3>
+                <div className="flex items-center gap-2">
+                  <Scissors className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-bold text-foreground">Design Details</h3>
+                  <span className="text-lg font-bold text-primary">የዲዛይን ዝርዝር</span>
                 </div>
                 
                 {selected.design_image_url && (
                   <div className="overflow-hidden rounded-xl border bg-muted/10">
-                    <div className="bg-muted/30 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Reference Image
+                    <div className="bg-muted/30 px-3 py-1.5 flex items-center gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Reference Image</span>
+                      <span className="text-[10px] font-bold text-primary">የማጣቀሻ ምስል</span>
                     </div>
                     <img src={selected.design_image_url} alt="Design" className="w-full object-cover" />
                   </div>
@@ -310,24 +327,26 @@ function TailorOrdersPage() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                       {[
-                        { label: "Coat style", value: design.coat_style },
-                        { label: "Pant style", value: design.pant_style },
-                        { label: "Vest style", value: design.vest_style },
+                        { label: "Coat style", am: "ካፖርት ስታይል", value: design.coat_style },
+                        { label: "Pant style", am: "ሱሪ ስታይል", value: design.pant_style },
+                        { label: "Vest style", am: "ቬስት ስታይል", value: design.vest_style },
                       ].map((s) => (
                         <div key={s.label} className="rounded-xl border bg-card p-3 shadow-sm">
-                          <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                            {s.label}
+                          <div className="mb-1 flex flex-col">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">{s.label}</span>
+                            <span className="text-[10px] font-bold text-primary">{s.am}</span>
                           </div>
-                          <div className="text-sm font-medium">{s.value || "Standard"}</div>
+                          <div className="text-sm font-bold text-foreground">{s.value || "Standard"}</div>
                         </div>
                       ))}
                     </div>
 
                     {design.notes && (
                       <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                        <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
-                          <Info className="h-3 w-3" />
-                          Special Instructions
+                        <div className="mb-2 flex items-center gap-2">
+                          <Info className="h-3 w-3 text-primary" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">Special Instructions</span>
+                          <span className="text-[10px] font-bold text-primary">ተጨማሪ ማስታወሻ</span>
                         </div>
                         <p className="text-sm italic leading-relaxed text-foreground/90">
                           "{design.notes}"
@@ -346,9 +365,10 @@ function TailorOrdersPage() {
 
               {/* Measurements */}
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-primary">
-                  <Ruler className="h-5 w-5" />
-                  <h3 className="text-lg font-bold">Measurements</h3>
+                <div className="flex items-center gap-2">
+                  <Ruler className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-bold text-foreground">Measurements</h3>
+                  <span className="text-lg font-bold text-primary">መለኪያዎች</span>
                 </div>
 
                 {meas ? (
@@ -356,41 +376,48 @@ function TailorOrdersPage() {
                     {[
                       { 
                         title: "Coat", 
+                        am: "ካፖርት",
                         data: [
-                          ["Length", meas.coat_length], 
-                          ["Waist", meas.coat_waist], 
-                          ["Chest", meas.coat_chest], 
-                          ["Shoulder", meas.coat_shoulder]
+                          ["Length", "ቁመት", meas.coat_length], 
+                          ["Waist", "ወገብ", meas.coat_waist], 
+                          ["Chest", "ደረት", meas.coat_chest], 
+                          ["Shoulder", "ትከሻ", meas.coat_shoulder]
                         ] 
                       },
                       { 
                         title: "Pant", 
+                        am: "ሱሪ",
                         data: [
-                          ["Length", meas.pant_length], 
-                          ["Waist", meas.pant_waist], 
-                          ["Hip", meas.pant_hip], 
-                          ["Thigh", meas.pant_thigh], 
-                          ["Bottom", meas.pant_bottom]
+                          ["Length", "ቁመት", meas.pant_length], 
+                          ["Waist", "ወገብ", meas.pant_waist], 
+                          ["Hip", "ዳሌ", meas.pant_hip], 
+                          ["Thigh", "ጭን", meas.pant_thigh], 
+                          ["Bottom", "ታች", meas.pant_bottom]
                         ] 
                       },
                       { 
                         title: "Vest", 
+                        am: "ቬስት",
                         data: [
-                          ["Length", meas.vest_length], 
-                          ["Waist", meas.vest_waist], 
-                          ["Chest", meas.vest_chest]
+                          ["Length", "ቁመት", meas.vest_length], 
+                          ["Waist", "ወገብ", meas.vest_waist], 
+                          ["Chest", "ደረት", meas.vest_chest]
                         ] 
                       },
                     ].map((group) => (
                       <div key={group.title} className="space-y-3">
-                        <div className="inline-block rounded-md bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          {group.title}
+                        <div className="flex items-center gap-2">
+                          <span className="inline-block rounded-md bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-foreground">{group.title}</span>
+                          <span className="text-[10px] font-bold text-primary">{group.am}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {group.data.map(([k, v]: any) => (
+                          {group.data.map(([k, am, v]: any) => (
                             <div key={k} className="rounded-lg border bg-muted/5 p-2 transition-colors hover:bg-muted/10">
-                              <div className="text-[10px] text-muted-foreground">{k}</div>
-                              <div className="text-sm font-bold">
+                              <div className="flex flex-col mb-1">
+                                <span className="text-[10px] font-bold text-foreground">{k}</span>
+                                <span className="text-[10px] font-bold text-primary">{am}</span>
+                              </div>
+                              <div className="text-sm font-bold text-foreground">
                                 {v ?? "—"}<span className="ml-0.5 text-[10px] font-normal text-muted-foreground">{v != null ? "cm" : ""}</span>
                               </div>
                             </div>

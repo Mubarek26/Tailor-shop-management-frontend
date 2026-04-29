@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NavItem {
   to: string;
@@ -57,14 +58,21 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Mobile header */}
       <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b bg-card/80 px-4 backdrop-blur lg:hidden">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[image:var(--gradient-primary)] text-primary-foreground">
-            <Scissors className="h-4 w-4" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[image:var(--gradient-primary)] text-primary-foreground overflow-hidden">
+            {user?.photo ? (
+              <img src={user.photo} alt={user.fullName} className="h-full w-full object-cover" />
+            ) : (
+              <Scissors className="h-4 w-4" />
+            )}
           </div>
           <span className="font-semibold">Tailor Pro</span>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setOpen(!open)}>
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button variant="ghost" size="icon" onClick={() => setOpen(!open)}>
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </header>
 
       <div className="flex">
@@ -112,16 +120,23 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             </nav>
 
             <div className="border-t border-sidebar-border p-3">
-              <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground text-sm font-semibold">
-                  {user?.fullName?.[0]?.toUpperCase() ?? "U"}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-medium">{user?.fullName}</div>
-                  <div className="truncate text-[11px] text-sidebar-foreground/60 capitalize">
-                    {user?.role}
+              <div className="mb-2 flex items-center justify-between gap-3 rounded-lg px-3 py-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground text-sm font-semibold overflow-hidden border border-sidebar-border/50">
+                    {user?.photo ? (
+                      <img src={user.photo} alt={user.fullName} className="h-full w-full object-cover" />
+                    ) : (
+                      user?.fullName?.[0]?.toUpperCase() ?? "U"
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-medium">{user?.fullName}</div>
+                    <div className="truncate text-[11px] text-sidebar-foreground/60 capitalize">
+                      {user?.role}
+                    </div>
                   </div>
                 </div>
+                <ThemeToggle />
               </div>
               <button
                 onClick={handleLogout}
