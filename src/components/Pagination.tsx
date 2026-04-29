@@ -36,7 +36,7 @@ export function Pagination({ page, totalPages, onPageChange, loading }: Paginati
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        <div className="flex items-center gap-1">
+        <div className="hidden sm:flex items-center gap-1">
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             // Logic to show a window of pages around current page
             let pageNum = page;
@@ -55,7 +55,7 @@ export function Pagination({ page, totalPages, onPageChange, loading }: Paginati
                 key={pageNum}
                 variant={page === pageNum ? "default" : "outline"}
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 text-xs"
                 onClick={() => onPageChange(pageNum)}
                 disabled={loading}
               >

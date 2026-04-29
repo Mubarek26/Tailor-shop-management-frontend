@@ -125,8 +125,62 @@ function CustomersPage() {
             <p className="text-sm text-muted-foreground">Customers are auto-created when you make orders.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Mobile View: List of Cards */}
+            <div className="grid gap-3 p-3 md:hidden">
+              {filtered.map((c) => (
+                <div 
+                  key={c._id} 
+                  className="group rounded-xl border bg-card p-4 transition-all active:scale-[0.98] hover:border-primary/50 cursor-pointer"
+                  onClick={() => openCustomer(c)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                        #{c.unique_code}
+                      </div>
+                      <div className="mt-1 font-bold text-foreground group-hover:text-primary transition-colors">
+                        {c.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{c.phone}</div>
+                    </div>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={(e) => e.stopPropagation()}
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete customer?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will remove {c.name} from your records.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground"
+                            onClick={() => removeCustomer(c._id)}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Code</th>
@@ -177,7 +231,8 @@ function CustomersPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </>
+      )}
         {!loading && customers.length > 0 && (
           <Pagination 
             page={page} 

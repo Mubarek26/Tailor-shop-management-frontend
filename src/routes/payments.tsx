@@ -77,8 +77,49 @@ function PaymentsPage() {
             <p className="font-medium">No orders to show payments for.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Mobile View: List of Cards */}
+            <div className="grid gap-3 p-3 md:hidden">
+              {orders.map((o) => {
+                const c = o.customer_id as Customer;
+                return (
+                  <Link key={o._id} to="/orders/$orderId" params={{ orderId: o._id }}>
+                    <div className="group rounded-xl border bg-card p-4 transition-all active:scale-[0.98] hover:border-primary/50">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                            #{c?.unique_code ?? "—"}
+                          </div>
+                          <div className="mt-1 font-bold text-foreground group-hover:text-primary transition-colors">
+                            {c?.name ?? "—"}
+                          </div>
+                        </div>
+                        <StatusBadge status={o.status} />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-y-3 border-t border-muted/50 pt-3">
+                        <div className="space-y-0.5">
+                          <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Total</div>
+                          <div className="text-xs font-semibold text-foreground">{formatETB(o.total_price)}</div>
+                        </div>
+                        <div className="space-y-0.5 text-right">
+                          <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Deposit</div>
+                          <div className="text-xs font-semibold text-muted-foreground">{formatETB(o.deposit)}</div>
+                        </div>
+                        <div className="col-span-2 flex items-center justify-between rounded-lg bg-destructive/5 px-2 py-1.5 border border-destructive/10">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-destructive/80">Remaining Balance</span>
+                          <span className="text-sm font-black text-destructive">{formatETB(o.remaining_price)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Customer</th>
@@ -113,7 +154,8 @@ function PaymentsPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </>
+      )}
         {!loading && orders.length > 0 && (
           <Pagination 
             page={page} 

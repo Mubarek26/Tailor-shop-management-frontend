@@ -84,8 +84,38 @@ function TailorsPage() {
             <p className="text-sm text-muted-foreground">Create one or assign by phone number.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Mobile View: List of Cards */}
+            <div className="grid gap-3 p-3 md:hidden">
+              {tailors.map((t) => (
+                <div 
+                  key={t._id} 
+                  className="rounded-xl border bg-card p-4 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                      {t.fullName?.[0]?.toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-bold text-foreground truncate">{t.fullName}</div>
+                      <div className="text-xs text-muted-foreground">{t.phoneNumber}</div>
+                    </div>
+                    <div className="text-[10px] font-bold uppercase px-2 py-1 rounded-md bg-muted text-muted-foreground border">
+                      {t.status ?? "active"}
+                    </div>
+                  </div>
+                  {t.email && (
+                    <div className="mt-3 border-t border-muted/50 pt-2 text-xs text-muted-foreground truncate">
+                      {t.email}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Tailor</th>
@@ -113,7 +143,8 @@ function TailorsPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </>
+      )}
         {!loading && tailors.length > 0 && (
           <Pagination 
             page={page} 
