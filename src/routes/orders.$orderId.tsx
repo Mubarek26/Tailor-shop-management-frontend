@@ -62,6 +62,9 @@ function OrderDetailPage() {
     },
   });
 
+  const [pendingTailorId, setPendingTailorId] = useState<string | null>(null);
+  const [showAssignDialog, setShowAssignDialog] = useState(false);
+
   const { data: measurements } = useQuery({
     queryKey: ["measurements", orderId],
     queryFn: async () => {
@@ -159,7 +162,11 @@ function OrderDetailPage() {
   });
 
   const updateStatus = (status: string) => updateStatusMutation.mutate(status);
-  const assignTailor = (tailorId: string) => assignTailorMutation.mutate(tailorId);
+  const assignTailor = (tailorId: string) => {
+    assignTailorMutation.mutate(tailorId);
+    setShowAssignDialog(false);
+    setPendingTailorId(null);
+  };
   const unassignTailor = () => unassignTailorMutation.mutate();
   const deleteOrder = () => deleteOrderMutation.mutate();
   const addPayment = (amount: number, type: "deposit" | "full") => addPaymentMutation.mutate({ amount, type });
@@ -343,14 +350,38 @@ function OrderDetailPage() {
               <div>
                 <p className="font-medium">{tailor.fullName}</p>
                 <p className="text-sm text-muted-foreground">{tailor.phoneNumber}</p>
-                <Button variant="outline" size="sm" className="mt-3 w-full" onClick={unassignTailor}>
-                  <UserMinus className="mr-2 h-4 w-4" /> Unassign
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="mt-3 w-full text-destructive hover:text-destructive hover:bg-destructive/10">
+                      <UserMinus className="mr-2 h-4 w-4" /> Unassign
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="w-[90vw] sm:max-w-[425px]">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Unassign tailor?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to remove <span className="font-bold text-foreground">{tailor.fullName}</span> from this order?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                      <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={unassignTailor} className="bg-destructive text-destructive-foreground">
+                        Unassign
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             ) : (
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">No tailor assigned.</p>
-                <Select onValueChange={assignTailor}>
+                <Select 
+                  value={pendingTailorId || ""} 
+                  onValueChange={(id) => {
+                    setPendingTailorId(id);
+                    setShowAssignDialog(true);
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Assign tailor..." />
                   </SelectTrigger>
@@ -366,6 +397,31 @@ function OrderDetailPage() {
                     )}
                   </SelectContent>
                 </Select>
+
+                <AlertDialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
+                  <AlertDialogContent className="w-[90vw] sm:max-w-[425px]">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Assign tailor?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Assign <span className="font-bold text-foreground">
+                          {tailors.find(t => t._id === pendingTailorId)?.fullName}
+                        </span> to this order?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                      <AlertDialogCancel onClick={() => {
+                        setPendingTailorId(null);
+                        setShowAssignDialog(false);
+                      }} className="mt-0">Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={() => pendingTailorId && assignTailor(pendingTailorId)}
+                        className="bg-[image:var(--gradient-primary)]"
+                      >
+                        Assign
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             )}
           </Card>
